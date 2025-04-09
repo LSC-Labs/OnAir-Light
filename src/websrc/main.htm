@@ -1,0 +1,702 @@
+<!--
+    TODO: Redesign for new Content management by data-* attributes to avoid id="" settings
+-->
+<!-- Status - Display Panel -->
+<div id="statuscontent">
+
+    <legend>Status of <span id="status_prog_name"></span> Ver.: <span id="status_prog_version"></span></legend>
+    <br>
+    <div class="row text-center">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default table-responsive">
+                <table class="table table-hover table-striped table-condensed">
+                    <caption>Device</caption>
+                    <tr>
+                        <th>Systemname</th>
+                        <td id="status_hostname"></td>
+                    </tr>
+                    <!--
+                    <tr>
+                        <th>Chip ID</th>
+                        <td id="status_chip_id"></td>
+                    </tr>
+                    <tr>
+                        <th>CPU Speed</th>
+                        <td><span id="status_cpu_clock"></span> Mhz</td>
+                    </tr>
+                    -->
+                    <tr>
+                        <th>Uptime</th>
+                        <td id="status_uptime"></td>
+                    </tr>
+                    <!-- First to clarify about the correct heap calculation ...
+                    <tr>
+                        <th>Heap usage</th>
+                        <td>
+                            <div class="progress" style="margin-bottom: 0 !important;">
+                                <div id="status_heap" class="progress-bar progress-bar-primary" role="progressbar">
+                                </div>
+                                <div id="status_heap_rest" class="progress-bar" style="background-color: bisque;" role="progressbar">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    -->
+                    <tr>
+                        <th>Flash usage</th>
+                        <td>
+                            <div class='progress' style="margin-bottom: 0 !important;">
+                                <div id="status_flash" class="progress-bar progress-bar-primary" role="progressbar">
+                                </div>
+                                <div id="status_flash_rest" class="progress-bar" style="background-color: bisque;" role="progressbar">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <!--
+                    <tr>
+                        <th>FS usage</th>
+                        <td>
+                            <div class='progress' style="margin-bottom: 0 !important;">
+                                <div id="status_fs" class="progress-bar progress-bar-primary" role="progressbar">
+                                    Progress
+                                </div>
+                                <div id="status_fs_rest" class="progress-bar" style="background-color: bisque;" role="progressbar">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    -->
+                    <tr>
+                        <th>Battery</th>
+                        <td ><span id="status_power"></span> V</td>
+                    </tr>
+
+                </table>
+            </div>
+
+            <div class="panel panel-default table-responsive">
+                <table data-cfg="client-table" class="table table-hover table-striped table-condensed">
+                    <caption>Client list</caption>
+                </table>
+            </div>
+
+            <div class="panel panel-default table-responsive">
+                <table class="table table-hover table-striped table-condensed">
+                    <caption>Network</caption>
+                    <tr>
+                        <th>SSID</th>
+                        <td id="status_ssid"></td>
+                    </tr>
+                    <tr>
+                        <th>Signal strength</th>
+                        <td><span id="status_rssi"></span> dB</td>
+                    </tr>
+                    <tr>
+                        <th>IP</th>
+                        <td id="status_ip"></td>
+                    </tr>
+                    <tr>
+                        <th>Gateway</th>
+                        <td id="status_gateway"></td>
+                    </tr>
+                    <tr>
+                        <th>Mask</th>
+                        <td id="status_netmask"></td>
+                    </tr>
+                    <tr>
+                        <th>DNS</th>
+                        <td id="status_dns"></td>
+                    </tr>
+                    <tr>
+                        <th>MAC</th>
+                        <td id="status_mac"></td>
+                    </tr>
+                </table> 
+            </div>
+            
+            <div class="panel panel-default table-responsive">
+                <table class="table table-hover table-striped table-condensed">
+                    <caption>MQTT</caption>
+                    <tr>
+                        <th>Enabled</th>
+                        <td data-cfg="isEnabled"></td>
+                    </tr>
+                    <tr>
+                        <th>Connected</th>
+                        <td data-cfg="isConnected"></td>
+                    </tr>
+                    <tr>
+                        <th>Last Connection start</th>
+                        <td data-cfg="started"></td>
+                    </tr>
+                    <tr>
+                        <th>Last Connection lost</th>
+                        <td data-cfg="disconTS"></td>
+                    </tr>
+                    <tr>
+                        <th>Disconnect reason</th>
+                        <td data-cfg="disconReason"></td>
+                    </tr>
+                </table>
+            </div>
+        
+        </div>
+    </div>
+</div>
+
+<div id="devicecontent">
+    <legend>Device Settings</legend>
+	<br>
+    <div class="row form-group">
+        <label class="col-xs-4">Host Name<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Hostname for your Device"></i></label>
+        <span class="col-xs-8 col-md-5">
+            <input class="form-control input-sm" placeholder="Hostname" value="" id="hostname" type="text" data-val="^[-_A-Za-z0-9]*$">
+        </span>
+        <br>
+    </div>
+    <div class="row form-group">
+        <label class="col-xs-4">Password<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Logon password for the Administrator"></i></label>
+        <span class="col-xs-8 col-md-5">
+            <input class="form-control input-sm" placeholder="Administrator Password" id="adminpwd"  type="password" data-val="^.{2,80}$" >
+        </span>
+        <br>
+    </div>
+    <div class="row form-group">
+        <div class="col-xs-12 col-md-9">
+            <button onclick="saveDevicePage()" class="btn btn-primary btn-sm pull-right">Save</button>
+        </div>    
+    </div>
+
+</div>
+
+<!-- Network and WiFi settings-->
+<div id="networkcontent">
+    <legend>Wi-Fi Settings</legend>
+    <h6 class="text-muted">Type your Wi-Fi Network's SSID<span class="sta-mode"> or press "Scan" for nerby Wireless Networks to join</span>.</h6>
+    <br>
+    <div class="row form-group">
+        <label class="col-xs-4">Mode<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="You can run your device in AP Mode or Client Mode. In client mode you will need to connect to an existing Wi-Fi network, in AP Mode ESP creates a Wi-Fi network by itself."></i></label>
+        <div class="col-xs-8">
+            <form>
+                <label class="radio-inline">
+                    <input type="radio" value="1" name="wmode" id="ap_mode" onclick="updateNetworkPageView(this);" checked>Access Point </label>
+                <label class="radio-inline">
+                    <input type="radio" value="0" name="wmode" id="no-ap_mode" onclick="updateNetworkPageView(this);">Client</label>
+            </form>
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-xs-4">SSID<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Wi-Fi Network's Name"></i></label>
+        <span class="col-xs-5 col-md-5">
+            <input  class="form-control input-sm ap-mode" id="ap_ssid" type="text" name="ap_ssid" data-val="^.{2,50}">
+            <select class="form-control input-sm sta-mode" id="ssid"    style="display:none;" onchange="updateBSSID();" data-val="^.{2,50}"></select>
+        </span>
+        <span class="col-xs-2">
+            <button id="scanwifibtn" type="button" class="btn btn-primary btn-xs sta-mode" style="display:none;" onclick="scanWifi()">Scan</button>
+        </span>
+    </div>
+   
+    <div class="row form-group">
+        <label class="col-xs-4">Password<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Wi-Fi Password"></i></label>
+        <span class="col-xs-8 col-md-5">
+            <input id="ap_pwd"    class="form-control input-sm ap-mode" type="password">
+            <input id="wifi_pwd"  class="form-control input-sm sta-mode" type="password">
+        </span>
+    </div>
+    <div class="row form-group sta-mode" style="display:none">
+        <label class="col-xs-4">BSSID<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="If you have two Wi-Fi networks with the same SSID you may want to choose the specific one by BSSID"></i></label>
+        <span class="col-xs-8 col-md-5">
+            <input id="bssid" class="form-control input-sm sta-mode" type="text" data-val="^$|^[\da-fA-F]{2}:[\da-fA-F]{2}:[\da-fA-F]{2}:[\da-fA-F]{2}:[\da-fA-F]{2}:[\da-fA-F]{2}$">
+        </span>
+    </div>
+    <div class="row form-group ap-mode" id="ap_hide_area">
+        <label class="col-xs-4">Hide WiFi<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="You can choose to hide Wireless Network name, so your ESP does not broadcast SSID, keep in mind that people can still find your network if they are insist."></i></label>
+        <div class="col-xs-8">
+            <form>
+                <label class="radio-inline">
+                    <input type="radio" value="1" name="hideapenable" id="ap_hide">Yes</label>
+                <label class="radio-inline">
+                    <input type="radio" value="0" name="hideapenable" checked>No</label>
+            </form>
+        </div>
+    </div>
+    <div class="row form-group sta-mode" id="dhcp_area">
+        <label class="col-xs-4">Use DHCP<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Choose if you want to get an IP address from DHCP server or not."></i></label>
+        <div class="col-xs-8">
+            <form>
+                <label class="radio-inline">
+                    <input type="radio" value="1" data-radio="no-dhcp" id="dhcp"  name="dhcpenabled" onclick="updateNetworkPageView(this);" checked>Yes</label>
+                <label class="radio-inline">
+                    <input type="radio" value="0" id="no-dhcp" name="dhcpenabled" onclick="updateNetworkPageView(this);">No</label>
+            </form>
+        </div>
+    </div>
+    <div id="ip_statics" style="display:none" class="ap-mode sta-mode dhcp-off">
+        <div class="row form-group">
+            <label class="col-xs-4">IP Address<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-html="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Enter IP Address<BR>(for example 192.168.4.1)"></i></label>
+            <span class="col-xs-8 col-md-5">
+              <input id="ap_ipaddress" class="form-control input-sm inError ap-mode"  data-val="$(IP)">
+              <input id="ipaddress"    class="form-control input-sm inError sta-mode" data-val="$(IP)">
+            </span>
+        </div>
+        <div class="row form-group">
+            <label class="col-xs-4">Subnet Mask<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-html="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Enter Subnet Mask<BR>(for example 255.255.255.0)"></i></label>
+            <span class="col-xs-8 col-md-5">
+              <input id="ap_subnet" class="form-control input-sm inError ap-mode"  data-val="$(IP)">
+              <input id="subnet"    class="form-control input-sm inError sta-mode" data-val="$(IP)">
+            </span>
+        </div>
+    </div>
+    <div id="ip_services" style="display:none" class="sta-mode dhcp-off">
+        <div class="row form-group">
+            <label class="col-xs-4">DNS Server</label>
+            <span class="col-xs-8 col-md-5">
+                <input id="dnsip" class="form-control input-sm inError" data-val="$(IP)">
+            </span>
+        </div>
+        <div class="row form-group">
+            <label class="col-xs-4">Gateway</label>
+            <span class="col-xs-8 col-md-5">
+                <input id="gwip" class="form-control input-sm inError" data-val="$(IP)">
+            </span>
+        </div>
+    </div>
+    <div id="fallback_area" class="row form-group sta-mode" >    
+        <label class="col-xs-4">Fallback<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Fallback to Access Point Mode when WiFi Network could not joined."></i></label>
+        <div class="col-xs-8">
+            <form name="fallbackmodeForm">
+                <label class="radio-inline"><input type="radio" value="1" name="fallbackmode" id="fallback">Enabled</label>
+                <label class="radio-inline"><input type="radio" value="0" name="fallbackmode" id="no-fallback" checked>Disabled</label>
+            </form>
+        </div>
+        <br> 
+    </div>
+    <div class="row form-group">
+        <div class="col-xs-12 col-md-9">
+            <button onclick="saveNetworkPage()" class="btn btn-primary btn-sm pull-right">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- Message broker -->
+<div id="mqttcontent">
+    <legend>MQTT Settings</legend>
+     <br>
+    <div class="row form-group">
+        <label class="col-xs-4">MQTT<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Please choose if you want to enable MQTT"></i></label>
+        <div class="col-xs-8">
+            <form>
+                <label class="radio-inline">
+                    <input type="radio" value="1" name="mqttEnabled" onclick="updateMqttPageView()"
+                           data-cfg="enabled" checked>Enabled</label> 
+                <label class="radio-inline">
+                    <input type="radio" value="0" name="mqttEnabled" onclick="updateMqttPageView()">Disabled</label>
+            </form>
+        </div>
+    </div>
+    <div id="mqttenabledsettings">
+        <div class="row form-group">
+            <label class="col-xs-4">Host / IP<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="MQTT server IP Address or url"></i></label>
+            <span class="col-xs-8 col-md-5">
+                <input  type="text" class="form-control input-sm" placeholder="MQTT Host" 
+                        data-cfg="host">
+            </span>
+            <br>
+        </div>
+        <div class="row form-group">
+            <label class="col-xs-4">Port<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="MQTT server port"></i></label>
+            <span class="col-xs-8 col-md-5">
+                <input type="text" class="form-control input-sm" placeholder="MQTT Port" 
+                data-cfg="port"
+                data-val="^$|^[\d]{1,5}$" value=""  >
+            </span>
+            <br>
+        </div>
+        <div class="row form-group">
+            <label class="col-xs-4">User<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="MQTT user"></i></label>
+            <span class="col-xs-8 col-md-5">
+        <input data-cfg="user" type="text" class="form-control input-sm" placeholder="MQTT User" value="">
+    </span>
+            <br>
+        </div>
+        <div class="row form-group">
+            <label class="col-xs-4">Password<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="MQTT server password if any"></i></label>
+            <span class="col-xs-8 col-md-5">
+                <input data-cfg="passwd" type="password" class="form-control input-sm" placeholder="" value="" >
+            </span>
+            <br>
+        </div>
+        <div class="row form-group">
+            <label class="col-xs-4">Topic prefix<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true"
+                    data-toggle="popover" data-trigger="hover" data-placement="right"
+                    data-content="Prefix applied to all MQTT topics"></i></label>
+            <span class="col-xs-8 col-md-5" >
+                <input data-cfg="topic" type="text" class="form-control input-sm" placeholder="MQTT topic" 
+                        value="" >
+            </span>
+            <br>
+        </div>
+        <div class="row form-group">
+            <label class="col-xs-4">Auto topic<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign"
+                    aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right"
+                    data-content="Automatically add a unique identifier (last 6 digits of MAC address) to the MQTT topic prefix"></i></label>
+            <span class="col-xs-8 col-md-5">
+                <input type="checkbox" data-cfg="autotopic">
+            </span>
+        </div>
+        <div class="row form-group">   
+            <label class="col-xs-4">Sync Time(sec)<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" 
+                   data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Sync rate"></i></label>
+            <span class="col-xs-8 col-md-5">
+                <input  type="text" class="form-control input-sm" placeholder="Sync rate" 
+                        value="" 
+                        data-cfg="syncrate"
+                        data-val="^[\d]{0,10}$">
+            </span>
+            <br>
+        </div>
+        <!-- Future... -->
+        <div class="row form-group" style="display:none;" >    
+            <label class="col-xs-4">MQTT for Home Assistant<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Enable MQTT topics and discovery for Home Assistant"></i></label>
+            <div class="col-xs-8 col-md-5">
+                <form>
+                    <label class="radio-inline"><input data-cfg="useha"    type="radio" value="1" name="mqtt_useha">Enabled</label>
+                    <label class="radio-inline"><input type="radio"                     value="0" name="mqtt_useha" checked>Disabled</label>
+                </form>
+            </div>
+            <br> 
+        </div>
+    
+    </div>
+    <div class="row form-group">  
+        <div class="col-xs-12 col-md-9">
+            <button onclick="saveMqttPage()" class="btn btn-primary btn-sm pull-right">Save</button>
+        </div>    
+    </div>
+   
+</div>
+
+<!-- On Air Lamp settings -->
+<div id="onaircontent">
+
+    <legend>OnAir Settings</legend>
+    <h6 class="text-muted">Setup the behaviour of your OnAir Lamp.</h6>
+    <br>
+
+    <div class="row form-group">
+        <label class="col-xs-4">Priority<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Select the most critical device"></i></label>
+        <div class="col-xs-8 col-md-5">
+            <form>
+                <label class="radio-inline">
+                    <input type="radio" value="mic" name="onairpriority"/>Microphone</label>
+                <label class="radio-inline">
+                    <input type="radio" value="cam" name="onairpriority" checked/>Camera</label>
+            </form>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <label class="col-xs-4">Camera<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Select the action, when an active video is detected."></i></label>
+        <span class="col-xs-8 col-md-5">
+            <select class="form-control input-sm" id="oncam" name="on_camera_active">
+                <option value='0'>Do nothing</option>
+                <option value='on'>Permanent light</option>
+                <option value='blink'>Blink the light</option>
+                <option value='wave'>Wave the light</option>
+            </select>
+        </span>
+    </div>
+    <div class="row form-group">
+        <label class="col-xs-4">Micro<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Select the action, when an open microphone is detected."></i></label>
+        <span class="col-xs-8 col-md-5">
+            <select class="form-control input-sm" id="onmic" name="on_microphone_active">
+                <option value='0'>Do nothing</option>
+                <option value='on'>Permanent light</option>
+                <option value='blink'>Blink the light</option>
+                <option value='wave'>Wave the light</option>
+            </select>
+        </span>
+    </div>
+    <div class="row form-group">
+        <label class="col-xs-4">Brightness<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Select the maximal brightness"></i></label>
+        <span class="col-xs-8 col-md-5">
+            <select class="form-control input-sm" id="onairbrightness">
+                <option value='20'>20%</option>
+                <option value='40'>40%</option>
+                <option value='60'>60%</option>
+                <option value='80'>80%</option>
+                <option value='100'>100%</option>
+            </select>
+        </span>
+    </div>
+    <div class="row form-group">
+        <div class="col-xs-12 col-md-9">
+            <button onclick="saveOnAirPage()" class="btn btn-primary btn-sm pull-right">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- Remote Control -->
+<div id="rf433content">
+    <legend>OnAir Settings</legend>
+    <h6 class="text-muted">Radio Control (433).</h6>
+    <br>
+
+    <div class="row form-group">
+
+        <label class="col-xs-5">Enable 433<i style="margin-left: 10px;" class="glyphicon glyphicon-info-sign"
+            aria-hidden="true" data-toggle="popover" data-trigger="hover" data-placement="right"
+            data-content="Enable or disable the RF433 listening."></i></label>
+        <label class="col-xs-8 col-md-5"><input type="checkbox" data-cfg="enabled"> enable remote controls</label>
+
+    </div>
+    <div class="row form-group" >
+        <label class="col-xs-12">Known codes</label>
+        <div class=" col-xs-12 col-md-10">
+            <div class="panel panel-default table-responsive">
+            <table data-id="listOfCodes" class="table table-hover table-striped table-condensed">
+                <thead>
+                    <th>Code</th><th>Device</th><th>Switch</th><th></th>
+                </thead>
+                <tbody data-id="knownCodes"></tbody>
+            </table>
+            </div>
+            <button data-id="add_msg" onclick="RF433Dialog.showDialog()" 
+                    class="btn btn-success btn-sm pull-right rf433-modified"
+                    style="width:8em">Add new</button>
+        </div>
+    </div>
+</div>
+
+<div id="backupcontent">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row">
+                <legend>Backup</legend>
+                <div class="col-sm-8">
+                    <h6 class="text-muted">Be aware, the backup file is NOT encrypted, store it on a safe place to avoid loosing your
+                        access credentials (!)
+                    </h6>
+                </div>
+            
+                <div class="col-sm-4">
+                    <button class="btn btn-primary btn-sm pull-right systemButton" onclick="backupConfig();">Backup Settings</button>
+                    <a id="downloadSet" style="display:none"></a>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <legend>Restore</legend>
+                <div class="col-sm-8">
+                    <h6 class="text-muted">Click and choose your backup file to restore.</h6>
+                </div>
+                <div class="col-sm-4">
+                    <label for="restoreSet" class="btn btn-primary btn-sm pull-right systemButton">Restore Settings</label>
+                    <input id="restoreSet" type="file" accept="text/json" onchange="restoreBackup();" style="display:none;">
+                </div>
+            </div>
+            <br>    
+            <br>
+            <div id="restoremodal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Please wait while restoring user data...</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div id="pbar" class="progress">
+                                <div id="dynamic" class="progress-bar progress-bar-primary progress-bar-striped active">Restoring...</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="restoreclose" style="display:none;" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+</div>
+
+<div id="systemcontent">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row">
+                <legend>Restart</legend>
+                <div class="col-sm-8">
+                    <h6 class="text-muted">Click to restart your device without saving changes.</h6>
+                </div>
+                <div class="col-sm-4">
+                    <label for="restart" class="btn btn-primary btn-sm pull-right systemButton" >Restart Device</label>
+                    <button id="restart" class="" onclick="rebootDevice();" style="display:none;"></button>
+                </div>
+                <br/>
+                <br/>
+                <legend>Factory Reset</legend>
+                <div class="col-sm-8">
+                    <h6 class="text-muted">Reset the Device to factory settings</h6>
+                </div>
+            
+                <div class="col-sm-4">
+                    <button class="btn btn-danger btn-sm pull-right systemButton" onclick="resetToFactorySettings();">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+</div>
+
+
+<div id="progresscontent">
+    <br>
+    <br>
+    <div class="container">
+        <div class="row">
+            <br>
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Please wait while your ESP restarts...</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="progress">
+                            <div id="progressBar" 
+                                class="progress-bar progress-bar-striped active" 
+                                role="progressbar">0%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer text-center" id="reconnect" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="feedbackcontent">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="row">
+                <legend>Windows Software</legend>
+                <div class="col-sm-12">
+                    <h5>A Windows monitoring software is available for download.</h5>
+                    <br/>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-xs-3">
+                    <button class="btn btn-primary btn-sm" style="min-width:10em"  onclick='window.open("//lsc-labs.de/Software/OnAirNotifier/Publish");'>One click deploy</button>
+                </div>
+                <div class="col-xs-9">
+                    The easiest way to install the software is to use the one click deploy feature (MS).
+                 You will stay up to date and get the software immediately. 
+                        Microsoft uses an executable file, with the name "setup.exe". From security point of view, this is not
+                        a good idea, but it is the easiest way to install the software.<br/>
+                        To limit the risk, the software is signed with a certificate from LSC-Labs.
+                        If you choose this way and you want to avoid a lot of warnings, install the root and the intermediate certificates
+                        from LSC-Labs first (be sure you are installing it from
+                        the correct page "https://lsc-labs.de/Certificates"). <br/>
+                        <button class="btn btn-primary btn-sm" style="min-width:10em"  onclick='window.open("//lsc-labs.de/Certificates/LSC_(Root)_CA.crt");'>LSC Root Cert</button>
+                        <button class="btn btn-primary btn-sm" style="min-width:10em"  onclick='window.open("//lsc-labs.de/Certificates/LSC_Labs_CA.crt");'>LSC-Labs Cert</button>
+                </div>  
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-xs-3">
+                    <button class="btn btn-primary btn-sm" style="min-width:10em"  onclick='window.open("//lsc-labs.de/Software/OnAirNotifier/OnAirNotifier.zip");'>Portable</button>
+                </div>
+                <div class="col-xs-9">
+                    Download the software (zip package)
+                        <br/>Unpack the software into a folder you like (i.E. C:\Apps\OnAirNotifier). As it is a portable version,
+                        you can start the software from any location (also from a USB stick) by starting the OnAirNotifier.exe.<br/>
+                        Be aware, that you have also a security risk, so ensure you are on the right download page!
+                </div>  
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="row">
+                <legend>Feedback</legend>
+                <h5>You have trouble with the software? You have a feature request? Don't worry, contact the development team... </h5>
+                <br/>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-xs-3"> 
+                    <button id="feedbackEmail" class="btn btn-primary btn-sm" style="min-width:10em" onclick="window.open('mailto:test@example.com');">eMail</button>
+                </div>
+                <div class="col-xs-9">Send a mail (it's not possible to send money with mail, but you can ask how to transfer 💵.)</div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-xs-3">
+                    <button class="btn btn-primary btn-sm" style="min-width:10em"  onclick='window.open("//github.com/LSC-Labs/OnAir-Light");'>GitHub</button>
+                </div>
+                <div class="col-xs-9">Use the github repository and open a issue.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="panelSetRF433Code">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Remote control</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row form-group">
+                    <div class="col-xs-4">
+                        <label>RF433 Code</label>
+                    </div>
+                    <div class="col-xs-8">
+                        <input  data-id="scan_code" class="new-mode"
+                                data-val="^0x[0-9A-Fa-f]*$|^[0-9]*$" 
+                                onkeyup="validateRF433Code(this)"> 
+                        <button data-id="scanButton" type="button" class="btn btn-default pull-right new-mode" 
+                                onclick="RF433Dialog.startScanCode()">Scan</button>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-xs-4">
+                        <label>Device</label>
+                    </div>
+                    <div class="col-xs-8">
+                        <select class="form-control input-sm sta-mode" data-id="device">
+                            <option value=1>Microphone</option>
+                            <option value=0>Camera</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-xs-4">
+                    <label>On / Off</label>
+                </div>
+                <div class="col-xs-8">
+                    <select class="form-control input-sm sta-mode" data-id="cmd">
+                        <option value=0>Off</option>
+                        <option value=1>On</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"
+                        >Cancel</button>
+                
+                <button data-id="acceptButton" type="button" class="btn btn-default" data-dismiss="modal"
+                        onclick="addRF433Code()" disabled>Add</button>
+            </div>
+        </div>
+
+    </div>
+</div>

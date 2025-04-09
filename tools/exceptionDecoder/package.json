@@ -1,0 +1,13 @@
+{
+  "name": "exceptiondecoder",
+  "version": "1.0.0",
+  "description": "Decodes ESP Exception ",
+  "scripts": {
+    "d1_mini stack exception": "python3 ../EspArduinoExceptionDecoder/decoder.py -p ESP8266 -t ~/.platformio/packages/toolchain-xtensa -e ../../.pio/build/d1_mini_debug/firmware.elf ../../exception.txt -s",
+    "d1_mini full exception":  "python3 ../EspArduinoExceptionDecoder/decoder.py -p ESP8266 -t ~/.platformio/packages/toolchain-xtensa -e ../../.pio/build/d1_mini_debug/firmware.elf ../../exception.txt -f"
+  },
+  "author": "LSC-Labs",
+  "license": "UNLICENSED",
+  "dependencies": {
+  }
+}

@@ -44,10 +44,12 @@ If you are still not satisfied with the receiver, cause you plan to install the 
 
 ## LED Stripe(s)
 
-If you have a good colleague with a 3D printer, like Patrick Linke - you can ask him to print a LED Stripe holder - this will avoid a lot of work to fix the stripes with glue or cable ties ;-)
+If you have a **good colleague** with a 3D printer, **like Patrick Linke** - you can ask him to print a LED Stripe holder - this will avoid a lot of work to fix the stripes with glue or cable ties ;-)
+
 ![RF433 02](resources/LED-Stripe01.png)
 
 The LED stripe is connected to the LIGHT port of the carrier and should have a reverse polarity protection which is realized by removing one pin and blocking the slot of the pin.
+
 ![RF433 02](resources/LED-Stripe02.png)
 
 Again - thanks a lot Patrick !
