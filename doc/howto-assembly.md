@@ -18,8 +18,10 @@ If you plan to use a battery shield, the build in WiFi antenna will be partial h
 To build the internal antenne, you have to interrput the connection of the build in antenna and attach a coax wire.
 ![Antenna Board](resources/Antenna01.png)
 
-At the end of the antenna the shield has to be stripped in length of 3.1 cm.
-At the end it should look like:
+Use a 50 Ohm coax cable (RG178). The antenna shield has to be stripped in length of 3.1 cm.
+
+ At the end it should look like:
+
 ![Antenna Board](resources/Antenna02.png)
 
 ## Battery/Akku support
