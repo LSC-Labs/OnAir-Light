@@ -12,6 +12,7 @@ tools/wsemulator/node_modules
 src/websrc/gzipped
 bin
 doc/~$n*
+Handbuch*
 
 # Prerequisites
 *.d
@@ -33,3 +34,9 @@ doc/~$n*
 *.a
 *.lib
 
+doc/books/IMG_7761.jpeg
+doc/books/IMG_7826.png
+doc/resources/Hardware1.png
+doc/resources/Hardware2.png
+doc/resources/Main02.png
+doc/resources/Main03.png

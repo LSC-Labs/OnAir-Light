@@ -182,9 +182,11 @@ bool ICACHE_FLASH_ATTR storeValue(char pTarget[], size_t nTargetSize, const char
 }
 */
 
-bool ICACHE_FLASH_ATTR setIPAddressIF(IPAddress pAddress, const char *strAddress, const char *strDefault) {
+bool ICACHE_FLASH_ATTR setIPAddressIF(IPAddress & pAddress, const char *strAddress, const char *strDefault) {
+    DEBUG_FUNC_START_PARMS("..,%s,%s",NULL_POINTER_STRING(strAddress),NULL_POINTER_STRING(strDefault));
     bool bResult = true;
     if(strAddress) {
+        DEBUG_INFOS("setIPAddressIF: setting strAddress=%s",strAddress);
         pAddress.fromString(strAddress);
     } else if(strDefault) {
         pAddress.fromString(strDefault);
@@ -194,7 +196,7 @@ bool ICACHE_FLASH_ATTR setIPAddressIF(IPAddress pAddress, const char *strAddress
     return(bResult);
 }
 
-bool ICACHE_FLASH_ATTR setIPAddress(IPAddress pAddress, const char *strAddress, const char *strDefault) {
+bool ICACHE_FLASH_ATTR setIPAddress(IPAddress & pAddress, const char *strAddress, const char *strDefault) {
     bool bResult = setIPAddressIF(pAddress,strAddress,strDefault);
     if(!bResult) pAddress.clear();
     return(bResult);

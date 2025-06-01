@@ -27,5 +27,5 @@ bool ICACHE_FLASH_ATTR storeValueIF(char  pTarget[], size_t nTargetSize, const c
 bool ICACHE_FLASH_ATTR storeValue(  char  pTarget[], size_t nTargetSize, const char* pszValue,const char* pszDefault = nullptr);
 */
 
-bool ICACHE_FLASH_ATTR setIPAddressIF(IPAddress pAddress, const char *pszAddress, const char *pszDefault = nullptr);
-bool ICACHE_FLASH_ATTR setIPAddress(  IPAddress pAddress, const char *pszAddress, const char *pszDefault = nullptr);
+bool ICACHE_FLASH_ATTR setIPAddressIF(IPAddress & pAddress, const char *pszAddress, const char *pszDefault = nullptr);
+bool ICACHE_FLASH_ATTR setIPAddress(  IPAddress & pAddress, const char *pszAddress, const char *pszDefault = nullptr);

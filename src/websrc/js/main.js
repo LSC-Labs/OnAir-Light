@@ -1056,18 +1056,6 @@ function updateNetworkPageView() {
       $("#ip_services").show();
     }
   }
- 
-/*
-  document.getElementById("ap_ssid").style.display       = bAPMode ? "block"   : "none";    
-  document.getElementById("ap_passwd").style.display     = bAPMode ? "block"   : "none";  
-  document.getElementById("ap_hide_area").style.display  = bAPMode ? "block"   : "none";    
-  document.getElementById("ssid").style.display          = bAPMode ? "none"    : "block";
-  document.getElementById("passwd").style.display        = bAPMode ? "none"    : "block";
-  document.getElementById("scanwifibtn").style.display   = bAPMode ? "none"    : "block";    
-  document.getElementById("hideBSSID").style.display     = bAPMode ? "none"    : "block";
-  document.getElementById("dhcp_area").style.display     = bAPMode ? "none"    : "block"; 
-  document.getElementById("fallback_area").style.display = bAPMode ? "none"    : "block"; 
-  */
 }
 
 /**
@@ -1083,10 +1071,12 @@ function validateNetworkPage() {
               checkElement("ipaddress","IP address") &&
               checkElement("subnet","subnet mask");
   } else {
+    console.log("Validating STA Mode");
     isValid = checkElement("ssid","SSID") &&
               checkElement("bssid","BSSID");
     if (isValid && !isDHCPSelected()) {
       // DHCP off -> fix address needed
+      console.log("Validationg static IP settings...");
       isValid = checkElement("ipaddress", "IP address") &&
                 checkElement("subnet", "subnet mask")    &&
                 checkElement("dnsip","DNS address")    &&
