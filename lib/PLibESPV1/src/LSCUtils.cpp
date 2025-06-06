@@ -80,10 +80,8 @@ void ICACHE_FLASH_ATTR parseBytesTo(byte *pBytes, const char *strData, char cSep
 bool ICACHE_FLASH_ATTR storeValueIF(float *pTarget, String strValue, const float *pDefault) {
     bool bResult = true;
     if(pTarget) {
-        if(strValue && strValue.length() > 0) { 
-            
-            *pTarget = strValue.toInt();
-            // DEBUG_INFOS(" storeValue(int) -> %s (%d)", strValue.c_str(),*pTarget);
+        if(strValue && strValue.length() > 0) {     
+            *pTarget = strValue.toFloat();
         } else if(pDefault && pTarget != pDefault) {
             *pTarget = *pDefault;
         } else {
@@ -103,9 +101,8 @@ bool ICACHE_FLASH_ATTR storeValueIF(int *pTarget, String strValue, const int *pD
     bool bResult = true;
     if(pTarget) {
         if(strValue && strValue.length() > 0) { 
-            
+            DEBUG_INFOS("storeValueIF(int) -> %s (%lu)",strValue.c_str(),strValue.toInt());
             *pTarget = strValue.toInt();
-            // DEBUG_INFOS(" storeValue(int) -> %s (%d)", strValue.c_str(),*pTarget);
         } else if(pDefault && pTarget != pDefault) {
             *pTarget = *pDefault;
         } else {
@@ -124,7 +121,8 @@ bool ICACHE_FLASH_ATTR storeValueIF(unsigned long *pTarget, String strValue, con
     bool bResult = true;
     if(pTarget) {
         if(strValue && strValue.length() > 0) { 
-            *pTarget = strValue.toInt();
+            unsigned long ulValue = strValue.toInt();
+            *pTarget = ulValue;
         } else if(pDefault && pTarget != pDefault) {
             *pTarget = *pDefault;
         } else {

@@ -31,12 +31,12 @@ CBatteryMeasure oBatMeasure(A0,4.4);
 /**
  * Network communication objects
  */
-CRF433Receiver  oRF433Receiver(RADIO_433_RECEIVER_PIN);
+CRF433Receiver       oRF433Receiver(RADIO_433_RECEIVER_PIN);
 CWiFiController      oWiFiController;
 CWebServer           oWebServer(80,registerWebRoutes);
 AsyncCorsMiddleware  oCorsMiddleware;
 CWebSocket           oWebSocket("/ws");
-CMQTTController             oMQTTController;
+CMQTTController      oMQTTController;
  
 // ToDo: Implement the https TLS
 // WiFiClientSecure secureClient;

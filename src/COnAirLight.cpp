@@ -20,19 +20,19 @@ void OnAirLightStatus::setState(const char *pszDevice, const char *pszMode) {
         int nDevState = ONAIR_DEVICE_OFF;
         if(strValue.equals("on") || isTrueValue(pszMode)) nDevState = ONAIR_DEVICE_ON;
         if(strName.equalsIgnoreCase("audio") || strName.equalsIgnoreCase("mic") )       { 
-            DEBUG_INFOS(" - setting isMicOn to : %d",nDevState);
             isMicOn = nDevState;
             ulLastUpdate = millis(); 
+            DEBUG_INFOS(" - setting isMicOn to : %d TS(%lu)",isCamOn,ulLastUpdate);
         }     
         else if(strName.equalsIgnoreCase("video") || strName.equalsIgnoreCase("cam"))  { 
-            DEBUG_INFOS(" - setting isCamOn to : %d",nDevState);
             isCamOn = nDevState; 
             ulLastUpdate = millis();
+            DEBUG_INFOS(" - setting isCamOn to : %d TS(%lu)",isCamOn,ulLastUpdate);
         } else if(strName.equalsIgnoreCase("media")) {
-            DEBUG_INFOS(" - setting all media to : %d",nDevState);
             isCamOn = nDevState;
             isMicOn = nDevState;
             ulLastUpdate = millis();
+            DEBUG_INFOS(" - setting all media to : %d TS(%lu)",isCamOn,ulLastUpdate);
         } else {
             DEBUG_INFOS(" - unknown device : %s",pszDevice);
         }
@@ -40,6 +40,7 @@ void OnAirLightStatus::setState(const char *pszDevice, const char *pszMode) {
 }
 bool OnAirLightStatus::isTimeOutReached(unsigned long ulTimeOutMillis) {
     bool bResult = false;
+   
     if(ulTimeOutMillis > 0 && ulLastUpdate > 0) {
         bResult = (ulLastUpdate + ulTimeOutMillis) < millis();
     }
@@ -67,9 +68,12 @@ void COnAirLight::readConfigFrom(JsonObject &oCfg) {
     // If not available, use default.
     if(ulBrightness < 10 || ulBrightness > 100) ulBrightness = ONAIR_LIGHT_BRIGHTNESS_DEFAULT;
     this->setBrightness(ulBrightness);
-    DEBUG_INFOS(" --- timeout act is: %lu",Config.TimeOutMillis);
-    // unsigned long ulTimeOut = oCfg["timeout"];
-    // Config.TimeOutMillis = storeValueIF(&Config.TimeOutMillis,oCfg["timeout"].as<unsigned long>());
+    // Timeout is in seconds, so convert to millis !
+    String strTimeOut = oCfg["timeout"];
+    if(strTimeOut && strTimeOut.length() > 0) {
+        Config.TimeOutMillis = strTimeOut.toInt() * 1000; // Convert to millis
+    } 
+    // storeValueIF(&Config.TimeOutMillis,oCfg["timeout"]);
     DEBUG_INFOS(" --- timeout set to: %lu",Config.TimeOutMillis);
     DEBUG_FUNC_END();
 }

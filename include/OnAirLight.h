@@ -48,9 +48,9 @@ struct OnAirLightClient {
 
 class COnAirLight : public CLightSwitch, public IConfigHandler, public IStatusHandler, public IMsgEventReceiver{
     private:
-        unsigned long _ulWaveFadeIn  = 400;
-        unsigned long _ulWaveFadeOut = 400;
-        unsigned long _ulWaveOnTime  = 1000;
+        unsigned long _ulWaveFadeIn  = 2000;
+        unsigned long _ulWaveFadeOut = 2000;
+        unsigned long _ulWaveOnTime  =  100;
         unsigned long _ulWaveOffTime = 1000;
         std::map<String,OnAirLightStatus> tClientStaties;
 
