@@ -25,7 +25,7 @@ struct OnAirLightConfig {
     int Priority   = ONAIR_CAMERA;
     int OnMicMode  = ONAIR_LIGHT_MODE_BLINK;
     int OnCamMode  = ONAIR_LIGHT_MODE_WAVE;
-    unsigned long TimeOutMillis = 3600 * 60 * 12; // 12h
+    unsigned long TimeOutMillis = 1000 * 60 * 60 * 12; // 12h
     // Brightness is inside the CLightSwitch
 };
 
