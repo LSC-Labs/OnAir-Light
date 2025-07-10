@@ -68,13 +68,14 @@ void COnAirLight::readConfigFrom(JsonObject &oCfg) {
     // If not available, use default.
     if(ulBrightness < 10 || ulBrightness > 100) ulBrightness = ONAIR_LIGHT_BRIGHTNESS_DEFAULT;
     this->setBrightness(ulBrightness);
-    // Timeout is in seconds, so convert to millis !
+    // Timeout is in seconds, so convert to millis ! - currently fix
+    /*
     String strTimeOut = oCfg["timeout"];
     if(strTimeOut && strTimeOut.length() > 0) {
         Config.TimeOutMillis = strTimeOut.toInt() * 1000; // Convert to millis
-    } 
-    // storeValueIF(&Config.TimeOutMillis,oCfg["timeout"]);
+    }   
     DEBUG_INFOS(" --- timeout set to: %lu",Config.TimeOutMillis);
+    */
     DEBUG_FUNC_END();
 }
 
