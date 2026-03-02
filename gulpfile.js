@@ -1,226 +1,49 @@
-var gulp = require('gulp');
-var fs = require('fs');
-var concat = require('gulp-concat');
-var gzip = require('gulp-gzip');
-var flatmap = require('gulp-flatmap');
-var path = require('path');
-var htmlmin = require('gulp-htmlmin');
-var uglify = require('gulp-uglify');
-var pump = require('pump');
+import fs from 'fs';
+import path from 'path';
+import gulp from 'gulp';
+import { getProjectName } from './scripts/_common.js';
 
-function espMainJsMinify (cb) {
-    return pump([
-        gulp.src('../../src/websrc/js/main.js'),
-        uglify(),
-        gulp.dest('../../src/websrc/gzipped/js/'),
-    ] );
-}
+// #region Settings, common functions and initialization
 
-function espMainJsGz() {
-    return gulp.src("../../src/websrc/gzipped/js/main.js")
-        .pipe(gzip({
-            append: true
-        }))
-    .pipe(gulp.dest('../../src/websrc/gzipped/js/'));
-}
+var Settings;
 
-function espMainJsGzh(cb) {
-    var source = "../../src/websrc/gzipped/js/" + "main.js.gz";
-    var destination = "../../src/webh/" + "main.js.gz.h";
- 
-    var wstream = fs.createWriteStream(destination);
-    wstream.on('error', function (err) {
-        console.log(err);
-    });
- 
-    var data = fs.readFileSync(source);
- 
-    wstream.write('#define main_js_gz_len ' + data.length + '\n');
-    wstream.write('const uint8_t main_js_gz[] PROGMEM = {')
- 
-    for (i=0; i<data.length; i++) {
-        if (i % 1000 == 0) wstream.write("\n");
-        wstream.write('0x' + ('00' + data[i].toString(16)).slice(-2));
-        if (i<data.length-1) wstream.write(',');
+console.log(getProjectName());
+console.log("=======================================");
+if(fs.existsSync("pages.json")) {
+    let strPagesFile = "pages.json";
+    if(!fs.existsSync(strPagesFile)) strPagesFile = "scripts/defaults/pages.json";
+    if(!fs.existsSync(strPagesFile)) strPagesFile = "lib/PLibESPV1/scripts/defaults/pages.json";
+    if(fs.existsSync(strPagesFile)) {
+        console.log(` --> using properties from "${strPagesFile}"`);
+        let strData = fs.readFileSync(strPagesFile);
+        Settings = {...Settings, ...JSON.parse(strData) }
+    } else {
+        console.log(" --> Property file not found... using Default...")
     }
- 
-    wstream.write('\n};')
-    wstream.end();
+}
+
+
+// #endregion
+
+// #region tasks...
+
+import {runBuildPages} from './scripts/_buildPages.js';
+gulp.task('buildPages', (cb) => {
+    console.log("Building pages...");  
+    runBuildPages(cb,Settings);
     cb();
-}
+});
 
-function scriptsConcat() {
-    return gulp.src([
-            '../../src/websrc/3rdparty/js/jquery-1.12.4.min.js',
-            '../../src/websrc/3rdparty/js/bootstrap-3.3.7.min.js',
-            '../../src/websrc/3rdparty/js/footable-3.1.6.min.js',
-        ])
-        .pipe(concat({
-            path: 'required.js',
-            stat: {
-                mode: 0666
-            }
-        }))
-        .pipe(gulp.dest('../../src/websrc/js/'))
-        .pipe(gzip({
-           append: true
-        }))
-        .pipe(gulp.dest('../../src/websrc/gzipped/js/'));
-}
+import {runCompilePages} from './scripts/_compilePages.js';
+gulp.task('compilePages', async(cb) => {
+    console.log("Compiling pages...");
+    runCompilePages(cb,Settings);
+});
 
-function scripts(cb) {
-    var source = "../../src/websrc/gzipped/js/" + "required.js.gz";
-    var destination = "../../src/webh/" + "required.js.gz.h";
- 
-    var wstream = fs.createWriteStream(destination);
-    wstream.on('error', function (err) {
-        console.log(err);
-    });
- 
-    var data = fs.readFileSync(source);
- 
-    wstream.write('#define required_js_gz_len ' + data.length + '\n');
-    wstream.write('const uint8_t required_js_gz[] PROGMEM = {')
- 
-    for (i=0; i<data.length; i++) {
-        if (i % 1000 == 0) wstream.write("\n");
-        wstream.write('0x' + ('00' + data[i].toString(16)).slice(-2));
-        if (i<data.length-1) wstream.write(',');
-    }
- 
-    wstream.write('\n};')
-    wstream.end();
-    cb();
-}
-
-function stylesConcat() {
-    return gulp.src([
-            '../../src/websrc/3rdparty/css/bootstrap-3.3.7.min.css',
-            '../../src/websrc/3rdparty/css/footable.bootstrap-3.1.6.min.css',
-            '../../src/websrc/3rdparty/css/sidebar.css',
-        ])
-        .pipe(concat({
-            path: 'required.css',
-            stat: {
-                mode: 0666
-            }
-        }))
-        .pipe(gulp.dest('../../src/websrc/css/'))
-        .pipe(gzip({
-            append: true
-        }))
-        .pipe(gulp.dest('../../src/websrc/gzipped/css/'));
-}
-
-function styles(cb) {
-    var source = "../../src/websrc/gzipped/css/" + "required.css.gz";
-    var destination = "../../src/webh/" + "required.css.gz.h";
- 
-    var wstream = fs.createWriteStream(destination);
-    wstream.on('error', function (err) {
-        console.log(err);
-    });
- 
-    var data = fs.readFileSync(source);
- 
-    wstream.write('#define required_css_gz_len ' + data.length + '\n');
-    wstream.write('const uint8_t required_css_gz[] PROGMEM = {')
- 
-    for (i=0; i<data.length; i++) {
-        if (i % 1000 == 0) wstream.write("\n");
-        wstream.write('0x' + ('00' + data[i].toString(16)).slice(-2));
-        if (i<data.length-1) wstream.write(',');
-    }
- 
-    wstream.write('\n};')
-    wstream.end();
-    cb();	
-}
-
-function fontgz() {
-	return gulp.src("../../src/websrc/3rdparty/fonts/*.*")
-        .pipe(gulp.dest("../../src/websrc/fonts/"))
-            .pipe(gzip({
-                append: true
-            }))
-        .pipe(gulp.dest('../../src/websrc/gzipped/fonts/'));
-}
-
-function fonts() {
-    return gulp.src("../../src/websrc/gzipped/fonts/*.*")
-        .pipe(flatmap(function(stream, file) {
-			var filename = path.basename(file.path);
-            var wstream = fs.createWriteStream("../../src/webh/" + filename + ".h");
-            wstream.on("error", function(err) {
-                gutil.log(err);
-            });
-			var data = file.contents;
-            wstream.write("#define " + filename.replace(/\.|-/g, "_") + "_len " + data.length + "\n");
-            wstream.write("const uint8_t " + filename.replace(/\.|-/g, "_") + "[] PROGMEM = {")
-            
-            for (i = 0; i < data.length; i++) {
-                if (i % 1000 == 0) wstream.write("\n");
-                wstream.write('0x' + ('00' + data[i].toString(16)).slice(-2));
-                if (i < data.length - 1) wstream.write(',');
-            }
-
-            wstream.write("\n};")
-            wstream.end();
-
-            return stream;
-        }));
-}
-
-function htmlsPrep() {
-    return gulp.src('../../src/websrc/*.htm*')
-        .pipe(htmlmin({collapseWhitespace: true, minifyJS: true}))
-        .pipe(gulp.dest('../../src/websrc/gzipped/'))
-        .pipe(gzip({
-            append: true
-        }))
-        .pipe(gulp.dest('../../src/websrc/gzipped/'));
-}
-
-function htmlsGz() {
-    return gulp.src("../../src/websrc/*.htm*")
-        .pipe(gzip({
-            append: true
-        }))
-    .pipe(gulp.dest('../../src/websrc/gzipped/'));
-}
-
-function htmls() {
-    return gulp.src("../../src/websrc/gzipped/*.gz")
-        .pipe(flatmap(function(stream, file) {
-            var filename = path.basename(file.path);
-            var wstream = fs.createWriteStream("../../src/webh/" + filename + ".h");
-            wstream.on("error", function(err) {
-                gutil.log(err);
-            });
-            var data = file.contents;
-            wstream.write("#define " + filename.replace(/\.|-/g, "_") + "_len " + data.length + "\n");
-            wstream.write("const uint8_t " + filename.replace(/\.|-/g, "_") + "[] PROGMEM = {")
-            
-            for (i = 0; i < data.length; i++) {
-                if (i % 1000 == 0) wstream.write("\n");
-                wstream.write('0x' + ('00' + data[i].toString(16)).slice(-2));
-                if (i < data.length - 1) wstream.write(',');
-            }
-
-            wstream.write("\n};")
-            wstream.end();
-
-            return stream;
-        }));
-}
-
-async function runner() {
-    const scriptTasks = gulp.series(espMainJsMinify, espMainJsGz, espMainJsGzh, scriptsConcat, scripts);
-    const styleTasks = gulp.series(stylesConcat, styles);
-    const fontTasks = gulp.series(fontgz, fonts);
-    const htmlTasks = gulp.series(htmlsGz, htmlsPrep, htmls);
-    const parallel = await gulp.parallel(scriptTasks, styleTasks, fontTasks, htmlTasks);
-    return await parallel();
-}
-
-exports.default = runner;
+import {runSyncFiles} from './scripts/_syncFiles.js';
+gulp.task('syncFiles', async (cb) => {
+    console.log("Syncing files...");
+    runSyncFiles(cb,Settings);
+    // cb();
+});
+// #endregion

@@ -5,19 +5,45 @@
  * 
  * to receive the objects you have to send Json requests from Postman like:
  * { "command": "status" }
- * 
+ * Expecting module to be in project subdir toos/wsemulator (2 Level deep !)
  */
 
-console.log("[I] Starting WebSocket Emulation Server for OnAir Hardware");
+console.log("[I] Starting WebSocket Emulation Server for your hardware");
 console.log("[I] You can connect to ws://localhost (port is 8080)");
 console.log("[I| Send your requests to this port with json requests like {\"command\": \"status\"}");
 console.log("[I] ..use i.E. Postmand with websock request");
 
-// #region setup the websocket server and default Websocket functions
-// For authentication - simulate Token - has to be the same as in the web - page...
-var AccessToken="JoWaschlEmulator";
-
 const WebSocket = require("ws");
+const fs = require("fs");
+const path = require("path");
+
+// #region Security
+
+// For authentication - simulate Token - has to be the same as in the web - page...
+const AccessToken="JoWaschlEmulator";
+const WS_NEEDS_AUTH = "saveconfig,getbackup,restorebackup,restart,factoryreset";
+
+function needsAuth(strCommand) {
+    let bNeedsAuth = false;
+    WS_NEEDS_AUTH.split(",").forEach(strCmd => {
+        if(strCmd == strCommand) bNeedsAuth = true;
+    });
+    return(bNeedsAuth);
+}
+function isAuthorized(oMsg) {
+    let bIsAuthorized = true;
+    if(needsAuth(oMsg.command)) {
+        bIsAuthorized = (AccessToken == oMsg.token);
+        console.log("checking access token : " + oMsg.token);
+    }
+    return(bIsAuthorized);
+}
+
+// #endregion
+
+// #region setup the websocket server and default Websocket functions
+
+
 
 const wss = new WebSocket.Server({
     port: 8080
@@ -33,6 +59,123 @@ wss.broadcast = function broadcast(oJsonData) {
 };
 
 
+
+/// Register event handler on the websocket
+wss.on('connection', function connection(ws) {
+    ws.on("error", () => console.log("[W] WebSocket Error - Assume a client is disconnected."));
+    ws.on('message', function incoming(message) {
+        let oMsg = JSON.parse(message);
+        console.log("[I] Request command '" + oMsg.command +"' received...") ;
+        if(isAuthorized(oMsg)) {
+            let strCommand = oMsg.command ? oMsg.command.toLowerCase() : "no-command";
+            switch (strCommand) {
+
+                case "getstatus":
+                    sendStatus();
+                    break;
+
+                case "getconfig":
+                    sendConfig();
+                    break;
+
+                case "saveconfig":
+                    saveConfig(oMsg.payload);
+                    break;
+
+                case "getbackup":
+                    backupConfig();
+                    break;
+
+                case "gettime":
+                    sendTime();
+                    break;
+
+                case "settime":
+                    setTime(oMsg.payload);
+                    break;
+
+                case "getfile":
+                    sendFile(oMsg.payload);
+                    break;
+
+                case "getfilelist":
+                    sendFileList();
+                    break;
+
+                case "scanwifi":
+                    sendWiFiList();
+                    break;
+
+                case "scanrf433":
+                    sendRF433ScanCode();
+                    break;
+        
+                case "restart":
+                    console.log(" ----- REBOOTING -----");
+                    break;
+
+                case "factoryreset":
+                    console.log(" ----- FACTORY RESET -----");
+                    oConfigData = getObjectFromFile("config.json");
+                    break;
+
+                default:
+                    console.log("[W] Unknown command " + strCommand);
+                    console.log(oMsg);
+                    break;
+            }
+        } else {
+            sendAccessDenied(oMsg);
+        }
+    });
+});
+
+
+
+//#endregion
+
+// #region Helper functions
+function findFile(strFileName) {
+    let strFoundFile;
+    [
+        "../../test/data",
+        "../../test",
+        "test/data",
+        "test",
+        "."
+    ].forEach(strPath => {
+        if(!strFoundFile) {
+            let strFile = path.join(strPath,strFileName);
+            if(fs.existsSync(strFile)) { 
+                strFoundFile = strFile;
+            }
+        }
+    });
+    return strFoundFile;
+}
+function getObjectFromFile(strFileName) {
+    let oResult = {};
+    if(strFileName) {
+        console.log(` - searching : "${strFileName}"` )
+        let strFoundFile = findFile(strFileName);
+        if(strFoundFile) {
+            console.log(` - using     : "${strFoundFile}"` )
+            let strData = fs.readFileSync(strFoundFile);
+            try {
+                oResult = JSON.parse(strData);
+            } catch(ex) {
+                console.log("[X] Exception reading file: " + strFoundFile);
+                console.log(strData);
+                console.log(ex);
+            }
+        }
+    }
+    console.log(oResult);
+    return(oResult);
+
+}
+
+
 /// Send a payload package to all receivers
 function sendPayload(strCommand, strDataType, oPayload, bWithToken) {
     let oData = {
@@ -46,119 +189,31 @@ function sendPayload(strCommand, strDataType, oPayload, bWithToken) {
     wss.broadcast(oData);
 }
 
-
-/// Register event handler on the websocket
-wss.on('connection', function connection(ws) {
-    ws.on("error", () => console.log("[W] WebSocket Error - Assume a client is disconnected."));
-    ws.on('message', function incoming(message) {
-        let obj = JSON.parse(message);
-        console.log("[I] Request command '" + obj.command +"' received...") ;
-        let strCommand = obj.command ? obj.command.toLowerCase() : "no-command";
-        switch (strCommand) {
-
-            case "getstatus":
-                sendStatus();
-                break;
-
-            case "getconfig":
-                sendConfig();
-                break;
-
-            case "saveconfig":
-                saveConfig(obj.payload);
-                break;
-
-            case "getbackup":
-                backupConfig();
-                break;
-
-            case "gettime":
-                sendTime();
-                break;
-
-            case "settime":
-                setTime(obj.payload);
-                break;
-
-            case "getfile":
-                sendFile(obj.payload);
-                break;
-
-            case "getfilelist":
-                sendFileList();
-                break;
-
-            case "scanwifi":
-                sendWiFiList();
-                break;
-
-            case "scanrf433":
-                sendRF433ScanCode();
-                break;
-    
-            case "reboot":
-                console.log(" ----- REBOOTING -----");
-                break;
-
-            default:
-                console.log("[W] Unknown command " + strCommand);
-                console.log(obj);
-                break;
+function sendAccessDenied(oMsg) {
+    let oData = {
+        "command": "error",
+        "data":    "401",
+        "AccessToken": "notValid",
+        "payload": {
+            "msg": "access denied",
+            "command": oMsg.command,
+            "type"   : "null"
         }
-    });
-});
-
-
-
-//#endregion
-
+    };
+    console.log("[I] sending data on websocket...");
+    console.log(oData)
+    wss.broadcast(oData);
+}
+// #endregion
 
 // #region Config and Status Data emulators
-
-var oConfigData = {
-    "hostname": "lsc-onair01",
-    "adminpwd": "admin-geheim",
-    "autorestart": "86400",
-    "wifi": {
-        "bssid": "aa:bb:33:22:11",
-        "ap_ssid": "LSC-OnAir",
-        "ap_mode": "0",
-        "ssid": "WiFiOnICE",
-        "wifi_pwd": "JoJoBaOel",
-        "offtime": "90", 
-        "hostname": "Air-Node"   
-    },
-    "app": {
-        "logConsole": "false",
-        "traceMode":  "false",
-    },
-    "onair": {
-        "priority": "mic",
-        "oncam": "wave",
-        "onmic": "on"
-    },
-    "mqtt" : {
-        "host": "mqtt-host",
-        "port": "",
-        "topic": "",
-        "user": "",
-        "passwd": ""
-    },
-    "rf433": {
-            "enabled": true,
-            "msgs": [
-                { "on": 4333356,"msg": 1, "type":1 },
-                { "on": 4333362,"msg": 0, "type":0 }
-            ],
-          }
-};
-
-
-function backupConfig() {
-    sendPayload("backup","config",oConfigData,true);
-}
+/**
+ * Config stays as variable, to test saveConfig() and sendConfig()
+ */
+var oConfigData = getObjectFromFile("config.json");
 
 function sendConfig() {
+    console.log("[I] Sending config data...")
     sendPayload("update","config",oConfigData,true);
     // wss.broadcast(stats);
 }
@@ -168,97 +223,14 @@ function saveConfig(oCfg) {
     oConfigData = oCfg;
 }
 
+function backupConfig() {
+    sendPayload("backup","config",oConfigData,true);
+}
 
 function sendStatus() {
-    var stats = {
-        "prog_name": "OnAir Light",
-        "prog_version": "0.5.0.12-D",
-        "uptime": "34:42:43",
-        "starttime": 74,
-        "now": 124963480,
-        "full_ver": "SDK:2.2.2-dev(38a443e)/Core:3.2.0-dev=30200000/lwIP:STABLE-2_1_3_RELEASE/glue:1.2-70-g4087efd/BearSSL:5166f2b",
-        "chip_id": "82dbdf",
-        "cpu_clock": 80,
-        "core_ver": "1a13ab95",
-        "flash_size": 4194304,
-        "flash_real_size": 4194304,
-        "heap_free": 28208,
-        "heap_max": 27192,
-        "sketch_size": 573264,
-        "sketch_free_size": 2572288,
-        "fs_total": 1024000,
-        "fs_used": 32768,
-        "fs_block_size": 8192,
-
-        "wifi": {
-            "hostname": "OnAirSimulator",
-            "accesspoint": true,
-            "stationmode": false,
-            "isConnected": true,
-            "startTime": 6234,
-            "ssid": "OnAir-ebcd45cf",
-            "dns": "192.168.4.1",
-            "mac": "26:D7:EB:CD:45:CF",
-            "ip": "192.168.4.1",
-            "gateway": "192.168.4.1",
-            "netmask": "255.255.255.0",
-            "rssi": -75
-        },
-        "app": {
-            "rebootPending": 0,
-            "ButtonPressed": "0",
-            "RestartWiFi": "0",
-            "DebugMode": "0"
-        },
-        "onair": {
-            "isMicOn": false,
-            "isCamOn": false,
-            "timeout": 0,
-            "clients": [
-            {
-                "client": "192.168.132.139",
-                "isCamOn": false,
-                "isMicOn": false,
-                "lastUpd": 11924258
-            },
-            {
-                "client": "RF433",
-                "isCamOn": false,
-                "isMicOn": false,
-                "lastUpd": 728968
-            }
-            ]
-        },
-        "mqtt": {
-            "isEnabled": true,
-            "isConnected": false,
-            "started": 33445,
-            "disconTS": 33467,
-            "disconReasonRC": 4,
-            "disconReason": "stupid counterpart"
-        },
-        "bat": {
-            "power": 4.17,
-            "available": true,
-            "raw": 973
-          },
-          "rf433": {
-            "enabled": true,
-            "msgs": [
-                { "on": 4333356,"msg": 1, "type":0 },
-                { "on": 4333362,"msg": 0, "type":1 }
-            ],
-          }
-    };
-    let oMissing = {
-        "ssid": "emuSSID",
-        "dns": "8.8.8.8",
-        "mac": "EM:44:11:33:22",
-        "ip": "192.168.2.2",
-        "gateway": "192.168.2.1",
-        "netmask": "255.255.255.0"
-    };
-    sendPayload("update","status",stats);
+    // Status is always from the filesystem - update in test folder also during running tests !
+    let oStatus = getObjectFromFile("status.json");
+    sendPayload("update","status",oStatus);
 }
 
 function sendRF433ScanCode() {
@@ -270,7 +242,7 @@ function sendRF433ScanCode() {
 
 //#endregion
 
-// #region Time and Status emulators
+// #region Time emulators
 
 function sendTime() {
     console.log("[I] Sending time...");
@@ -346,7 +318,7 @@ function sendWiFiList() {
                     }
                 ];
     sendPayload("update","ssidlist",oPayload);
-
+    
 }
 // #endregion
 
