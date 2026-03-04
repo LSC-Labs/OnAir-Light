@@ -1,13 +1,16 @@
 Import("env")
 import shutil
 import os
+import re
 import json
 from pathlib import Path
 
 
 
 INCLUDE_FILE     = os.path.join(env.subst("$PROJECT_INCLUDE_DIR"),"ProgVersion.h")
-VERSION_FILE     = os.path.join(env.subst("$PROJECT_DATA_DIR"),"prog_ver.json")
+VERSION_FILE     = os.path.join(env.subst("$PROJECT_DATA_DIR"),"version.json")
+TEST_STATUS_FILE = os.path.join(env.subst("$PROJECT_DIR"),"test","data","status.json")
+SETTINGS_FILE 	 = os.path.join(env.subst("$PROJECT_DIR"),"src","web","js","settings.js")
 FIRMWARE_SOURCE  = os.path.join(env.subst("$BUILD_DIR"), "firmware.bin")
 FIRMWARE_PATH    = os.path.join("bin")
 PROJECT_DIR      = os.path.normpath(env.subst("$PROJECT_DIR"))
@@ -45,6 +48,7 @@ def forceToCompileMain():
 
 
 def writeVersionIncludeFile(oVersion):
+	Path(INCLUDE_FILE).parent.mkdir(exist_ok=True, parents=True)
 	with open(INCLUDE_FILE,'w+') as oFP:
 		oFP.writelines([
 			'#pragma once' 
@@ -65,6 +69,43 @@ def writeVersionIncludeFile(oVersion):
 		
 		oFP.close()
 
+def updateJsonSettings(oVersion):
+	# Update the settings.js test file...
+	print("-> updating json settings")
+	strRegSearchProgName = "\"prog_name\"\s*:\s*\"([\-_A-Za-z0-9\s]*)\""
+	strRegSearchProgVer  = "\"prog_ver\"\s*:\s*\"([\.\-_A-Z0-9]*)\""
+	if os.path.exists(SETTINGS_FILE):
+		tLines = []
+		with open(SETTINGS_FILE, 'r') as oFP:
+			for strLine in oFP:
+				if re.search(strRegSearchProgName,strLine):
+					strLine = f'{strLine[:strLine.index(":")]}:"{oVersion["name"]}",\n'
+				if re.search(strRegSearchProgVer,strLine):
+					strLine = f'{strLine[:strLine.index(":")]}:"{oVersion["major"]}.{oVersion["minor"]}",\n'
+				tLines.append(strLine)
+			oFP.close()
+			
+		with open(SETTINGS_FILE, 'w') as oFP:
+			for strLine in tLines:
+				oFP.write(strLine)
+
+# Correct the testdata status file with the prog_name and version from version object
+def updateTestDataInfo(oVersion):
+	# Update the status.json test file...
+	print("-> updating test status")
+	if os.path.exists(TEST_STATUS_FILE):
+		with open(TEST_STATUS_FILE, 'r') as oFP:
+			oTestStatus = json.load(oFP)
+			oFP.close()
+			oTestStatus["prog_name"] = oVersion["name"]
+			oTestStatus["prog_version"] = f'{getVersionStringOf(oVersion)}-T'
+			print(f'writing version {oTestStatus["prog_version"]}')
+			with open(TEST_STATUS_FILE, 'w') as oFP:
+				# "Version: {oVersion['major']}.{oVersion['minor']}.{oVersion['patch']}.{oVersion['build'}")
+				json.dump(oTestStatus,oFP,indent=4)
+				oFP.close()
+			
+			
 def getVersionStringOf(oVersion):
 	strVersion = str(oVersion["major"]) + "." + str(oVersion["minor"]) + "." + str(oVersion["patch"]) + "." + str(oVersion["build"])
 	return(strVersion)
@@ -97,6 +138,7 @@ def after_build(source, target, env):
 #	shutil.copy(firmware_source, 'bin/d1_mini-firmware.bin')
 	strTargetFile = getTargetFirmwareName(env)
 	print(f' * -> storing final firmware bin to "{strTargetFile}"')
+	Path(strTargetFile).parent.mkdir(exist_ok=True, parents=True)
 	shutil.copy(FIRMWARE_SOURCE,strTargetFile)
 
 ##################################################################
@@ -121,25 +163,15 @@ def before_build(source, target, env):
 	
 	bHasChanged = not doesVersionMatch()
 	
-	if(oPackageFile["version"]):
-		tVersion = oPackageFile["version"].split(".")
-		if(len(tVersion) == 3):
-			if(bHasChanged == True):
-				print(f' * > adjusting version info for env : {strEnv}')
-				oVersion["major"] 	= tVersion[0]
-				oVersion["minor"] 	= tVersion[1]
-				oVersion["patch"]	= tVersion[2]	
-				oVersion["build"]	= 0
-
-	# Also Debug version will increment the build number
-	# When  
+	# Debug version will not increment the build number
+	# to avoid new compile if nothing changed...
 	if strEnv.endswith("_debug"):
 		print(' * - debug version detected... ')
+	else:
+		print(' * > incrementing build number...')
+		oVersion["build"] = oVersion["build"] + 1
+		bHasChanged = True
 
-	print(' * > incrementing build number...')
-	oVersion["build"] = oVersion["build"] + 1
-	bHasChanged = True
-	
 	if(bHasChanged):
 		print(" * > writing changes...")
 		# Write the version file out... either with new build number, or corrected major/minor/patch
@@ -165,14 +197,15 @@ print(" - stores the firmware file after building the bin.")
 
 # Default Version Object - if not exists
 if not os.path.exists(VERSION_FILE):
-	print(f' * - creating default json version file: "{VERSION_FILE}"')
+	print(f' A - creating default json version file: "{VERSION_FILE}"')
+	Path(VERSION_FILE).parent.mkdir(exist_ok=True, parents=True)
 	with open(VERSION_FILE, "w+") as oFP:
 		json.dump(oDefaultVersion,oFP,indent=4)
 		oFP.close()
 
 # Default Version Include File - if not exists
 if not os.path.exists(INCLUDE_FILE):
-	print(f' * - creating default version include file: "{INCLUDE_FILE}"')
+	print(f' A - creating default version include file: "{INCLUDE_FILE}"')
 	writeVersionIncludeFile(oDefaultVersion)
 
 if (os.path.exists(VERSION_FILE)):

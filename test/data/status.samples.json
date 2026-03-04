@@ -1,0 +1,46 @@
+{
+        "ssid": "emuSSID",
+        "dns": "8.8.8.8",
+        "mac": "EM:44:11:33:22",
+        "ip": "192.168.2.2",
+        "gateway": "192.168.2.1",
+        "netmask": "255.255.255.0",
+        
+        "bat": {
+            "power": 4.17,
+            "available": true,
+            "raw": 973
+          },
+          "rf433": {
+            "enabled": true,
+            "msgs": [
+                { "on": 4333356,"msg": 1, "type":0 },
+                { "on": 4333362,"msg": 0, "type":1 }
+            ]
+          },
+          "app": {
+            "rebootPending": 0,
+            "ButtonPressed": "0",
+            "RestartWiFi": "0",
+            "DebugMode": "0"
+        },
+        "onair": {
+            "isMicOn": false,
+            "isCamOn": false,
+            "timeout": 0,
+            "clients": [
+            {
+                "client": "192.168.132.139",
+                "isCamOn": false,
+                "isMicOn": false,
+                "lastUpd": 11924258
+            },
+            {
+                "client": "RF433",
+                "isCamOn": false,
+                "isMicOn": false,
+                "lastUpd": 728968
+            }
+            ]
+        }
+    }
