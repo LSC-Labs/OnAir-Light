@@ -1,0 +1,65 @@
+{
+    "DebugMode": true,
+    "prog_name": "OnAir Light",
+    "prog_version": "2.0.0.25-T",
+    "uptime": "00:00:02",
+    "starttime": 78,
+    "now": 2325,
+    "wifi": {
+        "stopTime": 0,
+        "restartTime": 4294967295,
+        "onlineTime": 2130,
+        "hostname": "DeviceSimulator",
+        "accesspoint": true,
+        "stationmode": false,
+        "isConnected": true,
+        "startTime": 6234,
+        "ssid": "LSC-ebcd45cf",
+        "dns": "192.168.4.1",
+        "mac": "26:D7:EB:CD:45:CF",
+        "ip": "192.168.4.1",
+        "gateway": "192.168.4.1",
+        "netmask": "255.255.255.0",
+        "rssi": 31
+    },
+    "mqtt": {
+        "isEnabled": true,
+        "isConnected": false,
+        "started": 33445,
+        "disconTS": 33467,
+        "disconReasonRC": 4,
+        "disconReason": "stupid counterpart"
+    },
+    "dewswitch": {
+        "in_error": false,
+        "int_error": "",
+        "ext_error": "",
+        "van_active": false
+    },
+    "sensorID": {
+        "physical": true,
+        "temp_c": 21,
+        "temp_c_raw": 21,
+        "temp_f": 69.8,
+        "temp_f_raw": 69.8,
+        "hum": 64,
+        "hum_raw": 64,
+        "dew_point": 13.93291,
+        "last_upd_ms": 0
+    },
+    "sensorOD": {
+        "physical": false,
+        "temp_c": 25,
+        "temp_c_raw": 25,
+        "temp_f": 72.8,
+        "temp_f_raw": 72.8,
+        "hum": 30,
+        "hum_raw": 30,
+        "dew_point": 17.9,
+        "last_upd_ms": 0,
+        "internet": false
+    },
+    "fan": {
+        "active": false
+    }
+}
