@@ -8,7 +8,8 @@ _obsolet
 node_modules
 bin
 temp
-test
+tmp
+dist/web
 tools/wsemulator/node_modules
 src/websrc/gzipped
 data/config.json

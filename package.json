@@ -1,6 +1,6 @@
 {
   "name": "onair-light",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "On Air Light - automatic light on open mic/cam",
   "main": "index.js",
   "type": "module",
@@ -18,12 +18,13 @@
   },
   "scripts": {
     "create-WebPages": "npm run build-Pages && npm run compile-Pages",
-    "css-compile": "sass       --style expanded --source-map --embed-sources --no-error-css scss/:src/web/css/",
-    "sync-Files": "gulp syncFiles",
-    "watch-WebPages": "watchlist src/web/pages lib/PLibESPV1/src/web/pages -- npm run update-Pages",
-    "watch-css": "sass --watch --style expanded --source-map --embed-sources --no-error-css scss/:src/web/css/",
     "build-Pages": "gulp buildPages",
-    "compile-Pages": "gulp compilePages"
+    "compile-Pages": "npm run update-Versions && gulp compilePages",
+    "watch-WebPages": "watchlist src/web/pages lib/PLibESPV1/src/web/pages -- npm run create-WebPages",
+    "css-compile": "sass       --style expanded --source-map --embed-sources --no-error-css scss/:src/web/css/",
+    "watch-css": "sass --watch --style expanded --source-map --embed-sources --no-error-css scss/:src/web/css/",
+    "update-Versions": "node scripts/updateVersionInfos",
+    "sync-RuntimeFiles": "node scripts/syncFiles"
   },
   "author": "LSC Labs - P.Liebl",
   "license": "MIT",
