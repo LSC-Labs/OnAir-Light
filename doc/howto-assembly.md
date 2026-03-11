@@ -27,8 +27,8 @@ Use a 50 Ohm coax cable (RG178). The antenna shield has to be stripped in length
 ## Battery/Akku support
 
 If you plan to use battery/akku support, you have to insert Li-Ion battery packages - either use a battery package inside, or use a battery slot, by replacing the batteries of the original device.
-![Battery orig](resources/Battery01.png)
-![Battery new](resources/Battery02.png)
+![Battery orig](resources/battery01.png)
+![Battery new](resources/battery02.png)
 
 Install the Mini D1 Battery Shield (at least V1.2) on top of the cpu
 
