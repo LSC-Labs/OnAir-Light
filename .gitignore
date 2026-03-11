@@ -7,6 +7,7 @@
 _obsolet
 node_modules
 bin
+logs
 temp
 tmp
 dist/web
