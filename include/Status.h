@@ -1,5 +1,5 @@
 #pragma once
-#include <WiFiController.h>
+#include <Network.h>
 #include <OnAirLight.h>
 
 class  CStatus : public IMsgEventReceiver, public IStatusHandler {
@@ -7,11 +7,12 @@ class  CStatus : public IMsgEventReceiver, public IStatusHandler {
         volatile bool isRebootPending = false;
         volatile bool isButtonPressed = false;
         volatile bool configLoaded    = false;
-        AsyncWebSocketClient *pScanRF433Requestor;
+        AsyncWebSocketClient * pScanRF433Requestor;
 
 
     public:
-        int receiveEvent(void *pSender, int nMsgType, const void *pMessage, int nClass);
-        void writeStatusTo(JsonObject &oStatusNode);
+        virtual int receiveEvent(const void * pSender, int nMsgType, const void * pMessage, int nMsgInfo);
+    
+        virtual void writeStatusTo(JsonObject & oStatusNode);
 };
 

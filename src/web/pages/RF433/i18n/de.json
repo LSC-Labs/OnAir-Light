@@ -1,0 +1,35 @@
+{
+    "RF433": {
+        "legend": "RF433 Einstellungen",
+        "desc": "Registrieren und konfigurieren der RF433 Funksender",
+        "enable": {
+            "text": "RF433 aktivieren",
+            "info": "Aktiviert oder deaktiviert die RF433 Empfangsfunktion",
+            "button": "Aktiviere"
+        },
+        "known": "Registrierte Befehle (Codes)",
+        "code": "RF433 Code",
+        "device": "Gerät",
+        "switch": "Schalter",
+        "addNew": "Hinzufügen",
+        "cam": "Kamera",
+        "mic": "Mikrofon",
+        "on" : "AN",
+        "off": "AUS",
+        "edit": {
+            "text": "Editiere",
+            "title": "Editiere die Fernbedienung"
+        },
+        "add" : {
+            "text": "Registriere",
+            "title": "Registriere eine Fernbedienung"
+        },
+        "del": "Lösche",
+        "scan": "Scannen",
+        "on_off": "An / Aus",
+        "cmd": {
+            "0": "Aus",
+            "1": "An"
+        }
+    }
+}

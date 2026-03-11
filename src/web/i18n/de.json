@@ -1,0 +1,312 @@
+{
+  "_language": "Deutsch",
+  "menu": {
+    "signin": "Anmelden",
+    "signout": "Abmelden",
+    "Support": "Feedback / Ticket",
+    "Settings": "Einstellungen",
+    "Maintenance": "Wartung",
+    "WiFi": "WLAN",
+    "Device": "Gerät",
+    "Feedback": "Kontakt"
+  },
+  "main": {
+    "ok": "OK",
+    "yes": "Ja",
+    "no": "Nein",
+    "enabled": "Aktiv",
+    "disabled": "Inaktiv",
+    "cancel": "Abbruch",
+    "changePending": "Änderungen liegen vor, zum Prüfen und Bestätigen bitte hier klicken.",
+    "pleaseReview": "Bitte die Änderungen überprüfen.",
+    "saveReboot": "Speichern und Neustart...",
+    "conLost": "Verbindung mit $(prog_name) abgebrochen. Erneuter Verbindungsaufbau...",
+    "noFileSelected": "Es wurde keine Datei ausgewählt...",
+    "saveBtn": "Speichern"
+  },
+  "signin": {
+    "title": "Bitte geben Sie das Geräte Passwort ein...",
+    "submit": "Anmelden"
+  },
+  "dialog": {
+    "wait": {
+      "title": "Bitte warten"
+    },
+    "save": {
+      "title": "Speichere die Konfiguration",
+      "waitmsg": "Bitte warten sie, bis die Aktion beendet ist..."
+    }
+  },
+  "Status": {
+    "legend": "Status - $(prog_name) Ver.: $(prog_ver)",
+    "panel": {
+      "device": "Gerät",
+      "network": "Netzwerk",
+      "mqtt": "Message Broker",
+      "dewpoint": "Taupunkt Schalter"
+    },
+    "hostname": "Systemname",
+    "uptime": "Laufzeit",
+    "flashSize": "Größe des Flash",
+    "sketchSize": "Größe des Sketches",
+    "flashUsage": "Speichernutzung",
+    "battery": "Batterie",
+    "ssid": "SSID",
+    "rssi": "Signal Stärke",
+    "ip": "IP Adresse",
+    "gateway": "Gateway Adresse",
+    "netmask": "Netzwerk Maske",
+    "dns": "DNS Server",
+    "mac": "MAC Adresse",
+    "enabled": "Aktiviert",
+    "connected": "Verbunden",
+    "lastConStart": "Sart der Verbidnung",
+    "lastConLost": "Ende der letzten Verbindung",
+    "disconReason": "Ursache des Abbruchs",
+    "memOK": "$(sketch_size) Kb genutzt von $(flash_available) Kb => $(flash_used_percent)%",
+    "memWarn": "Zu wenig Speicher für einen OTA Update! $(flash_used_percent)% genutzt.",
+    "fan": {
+      "active": "Lüfter aktiv"
+    },
+    "sensor": {
+      "OD": "Außensensor",
+      "ID": "Innensensor",
+      "dewpoint": "TP"
+    }
+  },
+  "Info": {
+    "legend": "Aktuell",
+    "intern": "Innen",
+    "extern": "Außen",
+    "dewpoint": "Taupunkt",
+    "temp": "Temperatur",
+    "hum": "Feuchtigkeit",
+    "clients": "Aktive Stationen"
+  },
+  "WiFi": {
+    "legend": "WLAN Einstellungen",
+    "scan": {
+      "title": "WLAN Suche - bitte warten...",
+      "titleDone": "Wählen Sie ein WLAN...",
+      "use": "Auswählen",
+      "text": "Suchen"
+    },
+    "mode": {
+      "info": "Sie können das Gerät im AP oder im Client Modus betreiben. Im Client Modus müssen sie sich mit einem bestehenden WLAN verbinden, Im AP Modus erstellt das Gerät ein eigenes WLAN.",
+      "label": "Modus"
+    },
+    "ssid": {
+      "info": "Das WLAN Netzwerk.",
+      "label": "SSID"
+    },
+    "bssid": {
+      "info": "Ein fester Netzwerk Knoten (optional).",
+      "label": "BSSID"
+    },
+    "passwd": {
+      "info": "Bitte geben Sie das WLAN Passwort ein.",
+      "label": "Passwort"
+    },
+    "hide": {
+      "info": "Die SSID des Access Points verstecken.",
+      "label": "Verstecke SSID"
+    },
+    "dhcp": {
+      "info": "DHCP oder eine feste IP Adresse.",
+      "label": "Nutze DHCP"
+    },
+    "ip": {
+      "info": "Die statische IP Adresse.",
+      "label": "IP Adresse"
+    },
+    "subnet": {
+      "info": "Die Netz Maske.",
+      "label": "Subnetz Maske"
+    },
+    "dns": {
+      "info": "Adresse des DNS Servers.",
+      "label": "DNS Server"
+    },
+    "gw": {
+      "info": "Adresse des Gateways.",
+      "label": "Gateway"
+    },
+    "fallback": {
+      "info": "Eröffne einen Access Point, wenn dass WLAN nicht erreichbar ist.",
+      "label": "Fallback"
+    },
+    "AP": {
+      "type": "Access Point",
+      "desc": "SSID des Access Points."
+    },
+    "STA": {
+      "type": "Client",
+      "desc": "SSID des WLANs, drücken Sie 'Suchen' um WLANs in der Nähe zu finden."
+    }
+  },
+  "MQTT": {
+    "title": "Message Broker",
+    "desc": {
+      "enable": "Aktiviere den Message Broker",
+      "configure": "Konfiguriere den Zugriff auf den Message Broker, oder stoppe den Dienst"
+    },
+    "enable": {
+      "label": "MQTT Unterstützung",
+      "info": "Aktiviere oder deaktiviere die MQTT Unterstützung"
+    },
+    "host": {
+      "label": "Host",
+      "info": "Der Name oder die Adresse des MQTT Servers"
+    },
+    "port": {
+      "label": "Port",
+      "info": "Port des MQTT Servers"
+    },
+    "user": {
+      "label": "User",
+      "info": "Technischer User für den MQTT Zugriff"
+    },
+    "passwd": {
+      "label": "Passwort",
+      "info": "Passwort des technischen Users"
+    },
+    "topic": {
+      "label": "Topic prefix",
+      "info": "Prefix für alle MQTT Topics"
+    },
+    "autotopic": {
+      "label": "Auto Topic",
+      "info": "Füge einen automatisches Topic Prefix an die Topics (die letzten 6 Zahlen der MAC Adresse)"
+    },
+    "syncrate": {
+      "label": "Sync (Sekunden)",
+      "info": "Synchronisations Zeit um einen Status an den MQTT Server zu schicken (Heartbeat)"
+    }
+  },
+  "Device": {
+    "legend": "Wilkommen zu ihrem '$(prog_name)' Gerät",
+    "title": "Setzen Sie den Namen des Gerätes (Hostname) und das Admin Passwort",
+    "hostname": {
+      "text": "Gerätename",
+      "title": "Der Name des Gerätes im Netzwerk (Hostname)"
+    },
+    "password": {
+      "text": "Passwort",
+      "title": "Setzen Sie das Passwort für den administrativen Zugriff"
+    }
+  },
+  "SysCfg": {
+    "legend": "Sichern & Wiederherstellung",
+    "title": "Sichern oder Wiederherstellen der Geräte Konfiguration. Achtung, die Backup Datei wird <b>NICHT</b> verschlüsselt.<br/> Sichern Sie die Datei an einen geschützten Platz um zu verhindern, dass jemand Zugriff auf ihre Zugangsdaten erhält...",
+    "Backup": {
+      "title": "Sichern",
+      "desc": "Sichere die aktuelle Konfiguration in eine Datei.",
+      "btn": "Sichere Konfig"
+    },
+    "Restore": {
+      "title": "Lade eine Konfiguration",
+      "desc": "Wählen Sie die Datei aus der die Konfiguration wieder hergestellt, bzw. geladen werden soll.",
+      "btn": "Lade Konfig",
+      "invalidFile": "Die gewählte Datei ist keine gültige Sicherungsdatei..."
+    }
+  },
+  "Firmware": {
+    "legend": "Firmware update (aktuelle firmware: $(prog_ver))",
+    "title": "Firmware update. Machen Sie vorab ein Backup der Konfiguration um einen Datenverlust zu vermeiden.",
+    "latest": "Aktuell verfügbare Version (online)",
+    "install": "Wählen Sie die Version, die sie installieren möchten",
+    "downloadBtn": "Download",
+    "installBtn": "Install",
+    "noInternet": "Aktuell scheint keine Internet Verbindung vorhanden zu sein, oder der Firmware Update Server ist offline."
+  },
+  "Feedback": {
+    "legend": "Fragen & Feedback",
+    "desc": "Probleme mit der Software? Eine Idee/Wunsch für ein neues Feature? Kontaktieren Sie das Entwicklungsteam...",
+    "doc": "Dokumentation",
+    "docText": "Hier finden Sie die aktuellen Handbücher (eventuell werden dort bereits ihre Fragen beantworteten).",
+    "docBtn": "Handbücher",
+    "email": "Schicken Sie eine Mail",
+    "emailText": "Kontaktieren Sie uns über Mail - gut, Geschenke schicken geht damit nicht, aber falls Sie möchten, finden wir einen Weg 🙈...",
+    "emailBtn": "Mail",
+    "github": "Via GitHub",
+    "githubText": "Öffnen Sie ein Ticket auf GitHub (für gefundene Fehler oder Implementierungs Anfragen / Ideen).",
+    "githubBtn": "Öffne Ticket"
+  },
+  "OnAir": {
+    "legend": "On Air Einstellungen",
+    "desc": "Einstellung zum Verhalten der OnAir Anzeige.",
+    "mic": {
+      "text": "Mikrofon",
+      "info": "Wählen sie das Verhalten, wenn ein offenes Mikrofon erkannt worden ist"
+    },
+    "cam": {
+      "text": "Kamera",
+      "info": "Wählen sie das Verhalten, wenn eine aktive Kamera erkannt worden ist"
+    },
+    "priority": {
+      "text": "Priorität",
+      "info": "Wählen Sie, welches Einstellung Priorität hat, wenn sowohl eine Kamera als auch ein Mikrofon aktiv ist"
+    },
+    "bright": {
+      "text": "Helligkeit (%)",
+      "info": "Setzen Sie die maximale Helligkeit der Lampe. Je geringer, desto weniger Stromverbrauch"
+    },
+    "A": {
+      "0": "Keine Aktion",
+      "on": "Leuchtet permanent",
+      "blink": "Blinkt",
+      "wave": "Dimmt an und aus"
+    }
+  },
+  "RF433": {
+    "legend": "RF433 Einstellungen",
+    "desc": "Registrieren und konfigurieren der RF433 Funksender",
+    "enable": {
+      "text": "RF433 aktivieren",
+      "info": "Aktiviert oder deaktiviert die RF433 Empfangsfunktion",
+      "button": "Aktiviere"
+    },
+    "known": "Registrierte Befehle (Codes)",
+    "code": "RF433 Code",
+    "device": "Gerät",
+    "switch": "Schalter",
+    "addNew": "Hinzufügen",
+    "cam": "Kamera",
+    "mic": "Mikrofon",
+    "on": "AN",
+    "off": "AUS",
+    "edit": {
+      "text": "Editiere",
+      "title": "Editiere die Fernbedienung"
+    },
+    "add": {
+      "text": "Registriere",
+      "title": "Registriere eine Fernbedienung"
+    },
+    "del": "Lösche",
+    "scan": "Scannen",
+    "on_off": "An / Aus",
+    "cmd": {
+      "0": "Aus",
+      "1": "An"
+    }
+  },
+  "System": {
+    "title": "Neustart oder Reset",
+    "desc": "Starten des Gerätes oder zurücksetzen auf Werkseinstellungen",
+    "Restart": {
+      "btn": "Neustart",
+      "title": "Neustart des Gerätes",
+      "desc": "Startet das Gerät neu. Nicht gespeicherte Änderungen werden verworfen.",
+      "confirm": "Jetzt neu starten? - alle nicht gespeicherten Änderungen gehen verloren!",
+      "waitmsg": "Bitte warten Sie, bis das Gerät neu gestartet ist..."
+    },
+    "Reset": {
+      "btn": "Zurücksetzen",
+      "title": "Werkseinstellungen",
+      "desc": "Alle Einstellungen werden verworfen, das Gerät wird auf Werkseinstellungen zurück gesetzt.",
+      "confirm": "Das Gerät auf Werkseinstellungen zurück setzen?",
+      "waitmsg": "Bitte warten Sie bis das Gerät zurück gesetzt wurde und neu startet..."
+    }
+  }
+}

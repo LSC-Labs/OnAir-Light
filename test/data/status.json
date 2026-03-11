@@ -1,7 +1,7 @@
 {
     "DebugMode": true,
     "prog_name": "OnAir Light",
-    "prog_version": "2.0.0.25-T",
+    "prog_version": "2.0.0.36-T",
     "uptime": "00:00:02",
     "starttime": 78,
     "now": 2325,
@@ -16,6 +16,11 @@
     "sketch_free_size": 2224128,
     "fs_total": 1024000,
     "fs_used": 16384,
+    "bat": {
+        "power": 4.17,
+        "available": true,
+        "raw": 973
+    },
     "wifi": {
         "stopTime": 0,
         "restartTime": 4294967295,

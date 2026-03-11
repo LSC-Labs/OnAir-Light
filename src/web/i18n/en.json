@@ -1,0 +1,325 @@
+{
+  "_language": "English",
+  "menu": {
+    "title": "$(prog_name)",
+    "signin": "Sign in",
+    "signout": "Sign out",
+    "Support": "Feedback / Ticket",
+    "Settings": "Settings",
+    "Maintenance": "Maintenance",
+    "Device": "Device",
+    "Feedback": "Feedback"
+  },
+  "main": {
+    "ok": "OK",
+    "yes": "Yes",
+    "no": "No",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "cancel": "Cancel",
+    "changePending": "You have uncommited changes, please click here to review and commit.",
+    "pleaseReview": "Please review the changes.",
+    "saveReboot": "Save and Reboot...",
+    "conLost": "Connection with $(prog_name) device absent. Reconnecting...",
+    "noFileSelected": "There is no file selected...",
+    "saveBtn": "Save"
+  },
+  "signin": {
+    "title": "Please enter your device admin password...",
+    "submit": "Login"
+  },
+  "dialog": {
+    "wait": {
+      "title": "Please wait"
+    },
+    "save": {
+      "title": "Saving configuration",
+      "waitmsg": "Please wait until process is finished..."
+    }
+  },
+  "Status": {
+    "legend": "Status of $(prog_name) Ver.: $(prog_ver)",
+    "panel": {
+      "device": "Device",
+      "network": "Network",
+      "mqtt": "Message broker",
+      "dewpoint": "Dew Point switch"
+    },
+    "hostname": "Systemname",
+    "uptime": "Uptime",
+    "flashSize": "Flash size",
+    "sketchSize": "Sketch size",
+    "flashUsage": "Mem usage",
+    "battery": "Battery",
+    "ssid": "SSID",
+    "rssi": "Signal strength",
+    "ip": "IP address",
+    "gateway": "Gateway address",
+    "netmask": "Network mask",
+    "dns": "DNS server",
+    "mac": "MAC address",
+    "enabled": "Enabled",
+    "connected": "Connected",
+    "lastConStart": "Last Connection start",
+    "lastConLost": "Last Connection lost",
+    "disconReason": "Disconnect reason",
+    "memOK": "$(sketch_size) Kb used of $(flash_available) Kb => $(flash_used_percent)%",
+    "memWarn": "Too less memory to update via OTA ! $(flash_used_percent)% used.",
+    "dewpoints": "Dew Points In / Out",
+    "fan": {
+      "active": "Fan active"
+    },
+    "sensor": {
+      "OD": "Sensor (Outdoor)",
+      "ID": "Sensor (Indoor)",
+      "dewpoint": "DP"
+    }
+  },
+  "Info": {
+    "legend": "Overview",
+    "clients": "Clients",
+    "noClients": "No clients connected...",
+    "none": "-",
+    "cam": "Camera",
+    "micro": "Microphone",
+    "panel": {
+      "clients": "Current clients",
+      "device": "Device"
+    },
+    "groupname": "Device",
+    "battery": "Battery",
+    "intern": "Indoor",
+    "extern": "Outdoor",
+    "dewpoint": "Dew Point",
+    "temp": "Temperature",
+    "hum": "Humidity"
+  },
+  "System": {
+    "title": "Restart or Reset",
+    "desc": "Restart or Reset the device",
+    "Restart": {
+      "btn": "Restart Device",
+      "title": "Restart Device",
+      "desc": "Restart the device. Save your changes, otherwise they will be lost.",
+      "confirm": "Restart the device now? - all unsaved changes will be lost!",
+      "waitmsg": "Please wait while the device is restarting..."
+    },
+    "Reset": {
+      "btn": "Reset Device",
+      "title": "Factory Reset",
+      "desc": "All settings will be dropped, the device will reboot with factory settings.",
+      "confirm": "Are you sure you want to reset the device to factory defaults? The device will restart in delivery state.",
+      "waitmsg": "Please wait while the device is resetting to factory defaults..."
+    }
+  },
+  "WiFi": {
+    "legend": "Wi-Fi Settings",
+    "scan": {
+      "title": "Scanning WiFi - please wait...",
+      "titleDone": "Select a WiFi to use...",
+      "use": "Select WiFi"
+    },
+    "mode": {
+      "info": "You can run your device in AP Mode or Client Mode. In client mode you will need to connect to an existing Wi-Fi network, in AP Mode ESP creates a Wi-Fi network by itself.",
+      "label": "Mode"
+    },
+    "ssid": {
+      "info": "Select the network name.",
+      "label": "SSID"
+    },
+    "bssid": {
+      "info": "Select the BSSID to use explicit node (optional).",
+      "label": "BSSID"
+    },
+    "passwd": {
+      "info": "Enter the WiFi password.",
+      "label": "Password"
+    },
+    "hide": {
+      "info": "Hide the SSID of the access point.",
+      "label": "Hide SSID"
+    },
+    "dhcp": {
+      "info": "Use DHCP or static ip addresses.",
+      "label": "Use DHCP"
+    },
+    "ip": {
+      "info": "Set the static IP address of this node.",
+      "label": "IP Address"
+    },
+    "subnet": {
+      "info": "Set the subnet mask to be used.",
+      "label": "Subnet mask"
+    },
+    "dns": {
+      "info": "Address of the DNS server.",
+      "label": "DNS server"
+    },
+    "gw": {
+      "info": "Address of the Gateway to the world.",
+      "label": "Gateway"
+    },
+    "fallback": {
+      "info": "Fallback to Access Point Mode when WiFi Network could not be joined.",
+      "label": "Fallback"
+    },
+    "AP": {
+      "type": "Access Point",
+      "desc": "Type your Wi-Fi Network's SSID."
+    },
+    "STA": {
+      "type": "Client",
+      "desc": "Type your Wi-Fi Network's SSID or press 'Scan' for nearby Wireless Networks to join."
+    }
+  },
+  "MQTT": {
+    "title": "Message Broker",
+    "desc": {
+      "enable": "Enable the message broker to use this service",
+      "configure": "Configure the message broker or disable to stop the service"
+    },
+    "enable": {
+      "label": "MQTT Support",
+      "info": "Enable or disable the MQTT support"
+    },
+    "host": {
+      "label": "Host",
+      "info": "MQTT Server host name, IP address or url"
+    },
+    "port": {
+      "label": "Port",
+      "info": "MQTT server port"
+    },
+    "user": {
+      "label": "User",
+      "info": "MQTT technical user to login"
+    },
+    "passwd": {
+      "label": "Password",
+      "info": "Password of the technical login user"
+    },
+    "topic": {
+      "label": "Topic prefix",
+      "info": "Prefix applied to all MQTT topics"
+    },
+    "autotopic": {
+      "label": "Auto topic",
+      "info": "Automatically add a unique identifier (last 6 digits of MAC address) to the MQTT topic prefix"
+    },
+    "syncrate": {
+      "label": "Sync time (seconds)",
+      "info": "Sync time to send a heartbeat message to the MQTT server"
+    }
+  },
+  "Device": {
+    "legend": "Welcome to your $(prog_name) Device",
+    "title": "Set the name of your device (hostname) and the password for the admin account",
+    "hostname": {
+      "text": "Host name",
+      "title": "Enter the hostname here..."
+    },
+    "password": {
+      "text": "Password",
+      "title": "Enter the password for the admin account"
+    }
+  },
+  "SysCfg": {
+    "legend": "Backup & Restore",
+    "title": "Backup or Restore the device configuration. Be aware, the backup file is <b>NOT</b> encrypted.<br/> Store it on a safe place to avoid loosing your access credentials...",
+    "Backup": {
+      "title": "Backup Settings",
+      "desc": "Save the config to a backup file.",
+      "btn": "Backup Settings"
+    },
+    "Restore": {
+      "title": "Restore Settings",
+      "desc": "Click and choose your file from your local device to be restored.",
+      "btn": "Restore Settings",
+      "invalidFile": "The file you selected is not a valid backup file..."
+    }
+  },
+  "Firmware": {
+    "legend": "Firmware update (current firmware: $(prog_ver))",
+    "title": "Firmware update is possible. Make a backup first, before updating to avoid loss of data.",
+    "latest": "Current available version online",
+    "install": "Select the version you want to install",
+    "downloadBtn": "Download",
+    "installBtn": "Install",
+    "noInternet": "It seems, there is no internet connection available or the firmware update server is down."
+  },
+  "Feedback": {
+    "legend": "Feedback",
+    "desc": "You have trouble with the software? You have a feature request? Don't worry, contact the development team...",
+    "doc": "Documentation",
+    "docText": "Open the online documentation (maybe your question is already answered there).",
+    "docBtn": "Handbooks",
+    "docUrl": "$(GitHubPage)/blob/main/doc/Taupunkt%20Schalter%20-%20Handbuch.pdf",
+    "email": "Send a mail",
+    "emailText": "Send a mail to contact us (it's not possible to send gifts with mail, but you can ask how to transfer 🙈).",
+    "emailBtn": "Send Mail",
+    "github": "Via GitHub",
+    "githubText": "Open an issue on GitHub (for bugs and feature requests).",
+    "githubBtn": "Open Issue"
+  },
+  "RF433": {
+    "legend": "RF433 Settings",
+    "desc": "Set the radio remotes for 433Mhz",
+    "enable": {
+      "text": "Enable RF433",
+      "info": "Enable or disable the RF433 function",
+      "button": "Enable"
+    },
+    "known": "Known codes",
+    "code": "RF433 Code",
+    "device": "Device",
+    "switch": "Switch",
+    "addNew": "Add new",
+    "cam": "Camera",
+    "mic": "Microphone",
+    "on": "ON",
+    "off": "OFF",
+    "edit": {
+      "text": "Edit",
+      "title": "Edit the remote"
+    },
+    "del": "Delete",
+    "scan": "Scan",
+    "on_off": "On / Off",
+    "cmd": {
+      "0": "Off",
+      "1": "On"
+    },
+    "set": "Save",
+    "add": {
+      "text": "Add",
+      "title": "Add a new remote"
+    },
+    "save": "Save"
+  },
+  "OnAir": {
+    "legend": "On Air Settings",
+    "desc": "Setup the behaviour of your OnAir Lamp.",
+    "mic": {
+      "text": "Microphone",
+      "info": "Select the action, when an active microphone is detected"
+    },
+    "cam": {
+      "text": "Camera",
+      "info": "Select the action, when an active camera is detected"
+    },
+    "priority": {
+      "text": "Priority",
+      "info": "Does the the camera or the microphone setting has priority, if both are on"
+    },
+    "bright": {
+      "text": "Brightness (%)",
+      "info": "Select the maximal brightness in percent"
+    },
+    "A": {
+      "0": "Do nothing",
+      "on": "Permanent light",
+      "blink": "Blink the light",
+      "wave": "Wave the light"
+    }
+  }
+}

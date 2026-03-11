@@ -18,7 +18,7 @@ void OnAirLightStatus::setState(const char *pszDevice, const char *pszMode) {
         String strName = pszDevice;
         String strValue = pszMode;
         int nDevState = ONAIR_DEVICE_OFF;
-        if(strValue.equals("on") || isTrueValue(pszMode)) nDevState = ONAIR_DEVICE_ON;
+        if(strValue.equals("on") || LSC::isTrueValue(pszMode)) nDevState = ONAIR_DEVICE_ON;
         if(strName.equalsIgnoreCase("audio") || strName.equalsIgnoreCase("mic") )       { 
             isMicOn = nDevState;
             ulLastUpdate = millis(); 
@@ -93,9 +93,9 @@ void COnAirLight::writeStatusTo(JsonObject &oCfg) {
     oCfg["isMicOn"] = isMicOn();
     oCfg["isCamOn"] = isCamOn();
     oCfg["timeout"] = Config.TimeOutMillis / 1000;
-    JsonArray oArray = oCfg.createNestedArray("clients");
+    JsonArray oArray = CreateJsonArray(oCfg,"clients");
     for(auto oClient : tClientStaties) {
-        JsonObject oData = oArray.createNestedObject();
+        JsonObject oData = CreateEmptyJsonObject(oArray);//  oArray.createNestedObject();
         oData["client"] = oClient.first;
         oData["isCamOn"] = oClient.second.isCamOn;
         oData["isMicOn"] = oClient.second.isMicOn;
@@ -191,16 +191,17 @@ void COnAirLight::updateLightStatus() {
 void COnAirLight::dispatchBrokerMessage(const char *pszMessage, int nLen) {
     DEBUG_FUNC_START_PARMS("\"%s\"",pszMessage);
     if(pszMessage && nLen > 10) {
-        DynamicJsonDocument oMsgDoc(nLen * 4);
+        JSON_DOC(oMsgDoc,nLen * 4);
+        // DynamicJsonDocument oMsgDoc(nLen * 4);
         DeserializationError rc = deserializeJson(oMsgDoc,pszMessage);
         if(rc == DeserializationError::Ok) {
             JsonObject oMsg = GetJsonDocumentAsObject(oMsgDoc);
-            String strClient = oMsg.containsKey("client") ? (const char*) oMsg["client"] : "-anonymous-";
-            if(oMsg.containsKey("mic"))     setClientStatus(strClient, "audio",  oMsg["mic"]);
-            if(oMsg.containsKey("audio"))   setClientStatus(strClient, "audio",  oMsg["audio"]);
-            if(oMsg.containsKey("cam"))     setClientStatus(strClient, "video",  oMsg["cam"]);
-            if(oMsg.containsKey("video"))   setClientStatus(strClient, "video",  oMsg["video"]);
-            if(oMsg.containsKey("media"))   {
+            String strClient = JsonKeyExists(oMsg,"client",String) ? (const char*) oMsg["client"] : "-anonymous-";
+            if(JsonKeyExists(oMsg,"mic",String))    setClientStatus(strClient, "audio",  oMsg["mic"]);
+            if(JsonKeyExists(oMsg,"audio",String))  setClientStatus(strClient, "audio",  oMsg["audio"]);
+            if(JsonKeyExists(oMsg,"cam",String))    setClientStatus(strClient, "video",  oMsg["cam"]);
+            if(JsonKeyExists(oMsg,"video",String))  setClientStatus(strClient, "video",  oMsg["video"]);
+            if(JsonKeyExists(oMsg,"media",String))  {
                 setClientStatus(strClient, "audio",oMsg["media"]);
                 setClientStatus(strClient, "video",oMsg["media"]);
             }
@@ -237,7 +238,7 @@ inline void COnAirLight::setClientStatus(String strClientAddress, const char *ps
 /// @param pMessage - currently not respected - future will be the hostname with open/closed devices
 /// @param nType  - ONAIR_DEVICE_ON or ONAIR_DEVICE_OFF
 /// @return 
-int COnAirLight::receiveEvent(void *pSender, int nMsgId, const void *pMessage, int nType) {
+int COnAirLight::receiveEvent(const void * pSender, int nMsgId, const void * pMessage, int nType) {
     DEBUG_FUNC_START_PARMS("%d,%d",nMsgId,nType);
     switch(nMsgId) {
         case MSG_MQTT_MSG_RECEIVED : // Message Broker Message in pMessage, size in nType

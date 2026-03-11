@@ -1,0 +1,77 @@
+
+
+<div id="OnAirPage" data-menu='{"name":"Settings|OnAir","title":"On Air", "icon":"MenuIcon"}'>
+    <legend data-i18n="OnAir.legend"></legend>
+    <div class="pageDesc" data-i18n="OnAir.desc"></div>
+
+    <!-- Mic or Cam Priority -->
+    <div class="row form-group" data-auth="RO">
+        <label class="$(col-label-class) info-icon" data-i18n="@title:OnAir.priority.info">
+            <span data-i18n="OnAir.priority"></span>
+            <icon data-icon="Info"></icon>
+        </label>
+        <div class="$(col-input-class)">
+            <form >
+                <label class="radio-inline">
+                    <input type="radio" value="cam" name="priority" checked>
+                    <span data-i18n="OnAir.cam"></span>
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" value="mic" name="priority">
+                    <span data-i18n="OnAir.mic"></span>
+                </label>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Camera settings -->
+    <div class="row form-group" data-auth="RO">
+         <label class="$(col-label-class) info-icon" data-i18n="@title:OnAir.cam.info">
+            <span data-i18n="OnAir.cam"></span>
+            <icon data-icon="Info"></icon>
+        </label>
+        <span class="$(col-input-class)">
+            <select class="form-control input-sm" name="oncam">
+                <option value='0'       data-i18n="OnAir.A.0"></option>
+                <option value='on'      data-i18n="OnAir.A.on"></option>
+                <option value='blink'   data-i18n="OnAir.A.blink"></option>
+                <option value='wave'    data-i18n="OnAir.A.wave"></option>
+            </select>
+        </span>
+    </div>
+
+    <!-- Microphone settings -->
+    <div class="row form-group" data-auth="RO">
+        <label class="$(col-label-class) info-icon" data-i18n="@title:OnAir.mic.info">
+            <span data-i18n="OnAir.mic"></span>
+            <icon data-icon="Info"></icon>
+        </label>
+        <span class="$(col-input-class)">
+            <select class="form-control input-sm" name="onmic">
+                <option value='0'       data-i18n="OnAir.A.0"></option>
+                <option value='on'      data-i18n="OnAir.A.on"></option>
+                <option value='blink'   data-i18n="OnAir.A.blink"></option>
+                <option value='wave'    data-i18n="OnAir.A.wave"></option>
+            </select>
+        </span>
+    </div>
+
+    <!-- Brightness of the light-->
+    <div class="row form-group" data-auth="RO">
+        <label class="$(col-label-class) info-icon" data-i18n="@title:OnAir.bright.info">
+            <span data-i18n="OnAir.bright"></span>
+            <icon data-icon="Info"></icon>
+        </label>
+        <span class="$(col-input-class)">
+            <select class="form-control input-sm" name="brightness">
+                <option value='20'>20%</option>
+                <option value='40'>40%</option>
+                <option value='60'>60%</option>
+                <option value='80'>80%</option>
+                <option value='100'>100%</option>
+            </select>
+        </span>
+    </div>
+
+    <div class="row form-group" data-element-type="save-btn-row"></div>
+</div> 

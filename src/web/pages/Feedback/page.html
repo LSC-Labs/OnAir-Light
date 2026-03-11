@@ -1,0 +1,39 @@
+
+<div id="FeedbackPage" 
+    data-menu='{"name":"Feedback","title":"Feedback", "icon":"Envelope"}'>
+    <legend data-i18n="Feedback.legend"></legend>
+    <div class="pageDesc" data-i18n="Feedback.desc" ></div>
+
+     <div class="row form-group actionPanel"> 
+        <legend data-i18n="Feedback.doc"></legend>
+        <div data-i18n="Feedback.docText"></div>
+        <div>
+            <button class="btn btn-primary btn-sm pull-right" 
+                    style="min-width:10em"  
+                    onclick='window.open("$(GitHubPage)/tree/main/doc");'
+                    data-i18n="Feedback.docBtn"></button>
+        </div>
+    </div>
+
+    <div class="row form-group actionPanel"> 
+        <legend data-i18n="Feedback.email"></legend>
+        <div data-i18n="Feedback.emailText"></div>
+        <div>
+            <button class="btn btn-primary btn-sm pull-right" 
+                    style="min-width:10em" 
+                    onclick="window.open('mailto:$(mailto)');"
+                    data-i18n="Feedback.emailBtn"></button>
+        </div>
+    </div>
+
+    <div class="row form-group actionPanel"> 
+        <legend data-i18n="Feedback.github"></legend>
+        <div data-i18n="Feedback.githubText"></div>
+        <div>
+            <button class="btn btn-primary btn-sm pull-right" 
+                    style="min-width:10em"  
+                    onclick='window.open("$(GitHubPage)/issues");'
+                    data-i18n="Feedback.githubBtn"></button>
+        </div>
+    </div>
+</div>

@@ -17,11 +17,12 @@
         "wifi_pwd": "JoJoBaOel",
         "hostname": "LSC-Device"   
     },
-    "dewswitch": {
-        "dewdelta": 5.2,
-        "hysteresis": 1.5,
-        "min_outdoor": -10.3,
-        "min_indoor": 10.1
+    "onair": {
+        "oncam": "wave",
+        "onmic": "blink",
+        "priority": "cam",
+        "brightness": 30,
+        "timeout": 43200
     },
     "sensorID": {
         "adjust_humidity": 5,

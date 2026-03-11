@@ -1,0 +1,11 @@
+{
+    "Info": {
+        "legend": "Aktuell",
+        "clients": "Aktive Stationen",
+        "intern": "Innen",
+        "extern": "Außen",
+        "dewpoint": "Taupunkt",
+        "temp": "Temperatur",
+        "hum": "Feuchtigkeit"
+    }
+}

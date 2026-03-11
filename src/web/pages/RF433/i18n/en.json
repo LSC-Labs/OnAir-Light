@@ -1,0 +1,35 @@
+{
+    "RF433": {
+        "legend": "RF433 Settings",
+        "desc": "Set the radio remotes for 433Mhz",
+        "enable": {
+            "text": "Enable RF433",
+            "info": "Enable or disable the RF433 function",
+            "button": "Enable"
+        },
+        "known": "Known codes",
+        "code": "RF433 Code",
+        "device": "Device",
+        "switch": "Switch",
+        "addNew": "Add new",
+        "cam": "Camera",
+        "mic": "Microphone",
+        "on" : "ON",
+        "off": "OFF",
+        "edit": {
+            "text": "Edit",
+            "title": "Edit the remote"
+        },
+        "add" : {
+            "text": "Add",
+            "title": "Add a new remote"
+        },
+        "del": "Delete",
+        "scan": "Scan",
+        "on_off": "On / Off",
+        "cmd": {
+            "0": "Off",
+            "1": "On"
+        }
+    }
+}

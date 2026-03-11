@@ -60,7 +60,7 @@ class COnAirLight : public CLightSwitch, public IConfigHandler, public IStatusHa
         int ButtonLightStatus = ONAIR_LIGHT_MODE_OFF;
     public:
         COnAirLight(int nPin);
-        int receiveEvent(void *pSender, int nMsgId, const void*pMsg, int nType) override;
+        int receiveEvent(const void *pSender, int nMsgId, const void*pMsg, int nMsgInfo) override;
         void readConfigFrom(JsonObject &oCfg) override;
         void writeConfigTo(JsonObject &oCfg, bool bHideCritical) override;
         void writeStatusTo(JsonObject &oStatus) override;

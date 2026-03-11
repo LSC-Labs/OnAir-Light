@@ -1,0 +1,29 @@
+{
+
+    "OnAir": {
+        "legend":"On Air Einstellungen",
+        "desc": "Einstellung zum Verhalten der OnAir Anzeige.",
+        "mic": {
+            "text": "Mikrofon",
+            "info": "Wählen sie das Verhalten, wenn ein offenes Mikrofon erkannt worden ist"
+        },
+        "cam": {
+            "text": "Kamera",
+            "info": "Wählen sie das Verhalten, wenn eine aktive Kamera erkannt worden ist"
+        },
+        "priority": {
+            "text": "Priorität",
+            "info": "Wählen Sie, welches Einstellung Priorität hat, wenn sowohl eine Kamera als auch ein Mikrofon aktiv ist"
+        },
+        "bright": {
+            "text": "Helligkeit (%)",
+            "info": "Setzen Sie die maximale Helligkeit der Lampe. Je geringer, desto weniger Stromverbrauch"
+        },
+        "A": {
+            "0" : "Keine Aktion",
+            "on": "Leuchtet permanent",
+            "blink": "Blinkt",
+            "wave": "Dimmt an und aus"
+        }
+    }
+}

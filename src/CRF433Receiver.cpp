@@ -4,7 +4,7 @@
 #ifdef RADIO_433_RECEIVER_PIN
 #include <RF433Receiver.h>
 #include <Appl.h>
-#include <LSCUtils.h>
+#include <JsonHelper.h>
 #include <AppMsgs.h>
 #include <OnAirLight.h>
 
@@ -38,9 +38,9 @@ void CRF433Receiver::setup(int nPin) {
 void CRF433Receiver::writeConfigTo(JsonObject &oCfg, bool bHideCritical){
     DEBUG_FUNC_START();
     oCfg["enabled"] = Config.isEnabled;
-    JsonArray tMessageList = oCfg.createNestedArray("msgs");
+    JsonArray tMessageList = CreateJsonArray(oCfg,"msgs");//  oCfg.createNestedArray("msgs");
     for(auto oEntry : this->tMessagesToSend) {
-        JsonObject oData = tMessageList.createNestedObject();
+        JsonObject oData = CreateEmptyJsonObject(tMessageList); //  tMessageList.createNestedObject();
 
         int nMsg = oEntry.second.MsgId - MSG_ONAIR_BASE;
         if(nMsg < 0 || nMsg > ONAIR_DEVICE_UPPER_LIMIT) nMsg = ONAIR_CAMERA;
@@ -58,7 +58,7 @@ void CRF433Receiver::writeConfigTo(JsonObject &oCfg, bool bHideCritical){
 void CRF433Receiver::readConfigFrom(JsonObject &oCfg){
     DEBUG_FUNC_START();
     DEBUG_JSON_OBJ(oCfg);
-    storeValueIF(&Config.isEnabled,oCfg["enabled"]);
+    LSC::setJsonValue(oCfg,"enabled",&Config.isEnabled);
     String strOper = oCfg["_oper"].as<String>();
     bool bDeleteExisting = !strOper.equalsIgnoreCase("upd");
     if(bDeleteExisting) this->tMessagesToSend.clear();

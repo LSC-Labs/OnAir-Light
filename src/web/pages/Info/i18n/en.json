@@ -1,0 +1,29 @@
+{
+    "Info": {
+
+        "legend": "Overview",
+        "clients": "Clients",
+        "noClients": "No clients connected...",
+        "none": "-",
+        "cam": "Camera",
+        "micro": "Microphone",
+
+
+
+        "panel": {
+            "clients": "Current clients",
+            "device": "Device"
+        },
+        "groupname": "Device",
+        "battery": "Battery",
+
+
+
+
+        "intern": "Indoor",
+        "extern": "Outdoor",
+        "dewpoint": "Dew Point",
+        "temp": "Temperature",
+        "hum": "Humidity"
+    }
+}

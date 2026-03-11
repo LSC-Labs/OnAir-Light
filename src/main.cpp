@@ -3,16 +3,24 @@
 #include <FileSystem.h>
 #include <Appl.h>
 #include <Status.h>
+#include <JsonHelper.h>
 #include <Button.h>
 #include <RGBLed.h>
 #include <WiFiController.h>
 #include <WebServer.h>
+#include <WebRoutes.h>
+#include <WebAppApi.h>
 #include <WebSocket.h>
-#include <AppWebApi.h>
+
 #include <MQTTController.h>
 #include <BatteryMeasure.h>
 #include <RF433Receiver.h>
 
+
+/**
+ * Initialize and open the file system...
+ */
+CFS oFS;
 
 /**
  *  Application Config and Status objects
@@ -33,7 +41,7 @@ CBatteryMeasure oBatMeasure(A0,4.4);
  */
 CRF433Receiver       oRF433Receiver(RADIO_433_RECEIVER_PIN);
 CWiFiController      oWiFiController;
-CWebServer           oWebServer(80,registerWebRoutes);
+CWebServer           oWebServer(80);
 AsyncCorsMiddleware  oCorsMiddleware;
 CWebSocket           oWebSocket("/ws");
 CMQTTController      oMQTTController;
@@ -64,52 +72,39 @@ CMyMiddleware oTestMW;
 
 void runDebugTests() {
   Serial.println(" ---------------- DEBUG TESTS -");
-  Serial.printf("File /config.json exits  : %d\n",fileExists("/config.json"));
-  Serial.printf("File /default.json exits : %d\n",fileExists("/default.json"));
-  Serial.println(getFileList());
-  /*
-  Serial.println("checking encryption...");
-  String strIP = "1.2.3.4";
-  String strToken = getNewAuthToken(strIP);
-  bool bResult = isAuthTokenValid(strToken,strIP);
-  Serial.printf("--> result : %d\n",bResult);
-  */
+  Serial.printf("File /config.json exits  : %d\n",oFS.fileExists("/config.json"));
+  Serial.printf("File /default.json exits : %d\n",oFS.fileExists("/default.json"));
+  Serial.println("Current files:");
+  Serial.println(oFS.getFileList());
+  Serial.printf("Button status : isLogicalOn == %d\n",oButton.isPressed());
   Serial.println(" ---------------- DEBUG TESTS - END");
 }
 #endif
 
 /// @brief Register all Appl modules (Status/Config) and initialize the application
 /// and load the configuration file, if button is not pressed.
-void setupAppl(bool bLoadConfig = true) {
-  // Register modules to listen on the Appl-Message bus
-  Appl.MsgBus.registerEventReceiver(&AppStatus);
-  Appl.MsgBus.registerEventReceiver(&oOnAirLight);
-  
-  // Register modules with configuration
-  Appl.addConfigHandler("web",   &oWebServer);
-  Appl.addConfigHandler("wifi",  &oWiFiController);
-  Appl.addConfigHandler("onair", &oOnAirLight);
-  Appl.addConfigHandler("app",   &AppConfig);
-  Appl.addConfigHandler("mqtt",  &oMQTTController);
-  
-  // Register modules for status infos
-  Appl.addStatusHandler("wifi",  &oWiFiController);
-  Appl.addStatusHandler("app",   &AppStatus);
-  Appl.addStatusHandler("onair", &oOnAirLight);
-  Appl.addStatusHandler("mqtt",  &oMQTTController);
-  Appl.addStatusHandler("bat",   &oBatMeasure);
-  
-  Appl.addConfigHandler("rf433", &oRF433Receiver);
-  Appl.addStatusHandler("rf433", &oRF433Receiver);
+void registerModules() {
+    // Register modules to listen on the Appl-Message bus
+    Appl.MsgBus.registerEventReceiver(&AppStatus);
+    Appl.MsgBus.registerEventReceiver(&oOnAirLight);
+    
+    // Register modules with configuration
+    Appl.addConfigHandler("web",   &oWebServer);
+    Appl.addConfigHandler("wifi",  &oWiFiController);
+    Appl.addConfigHandler("onair", &oOnAirLight);
+    Appl.addConfigHandler("app",   &AppConfig);
+    Appl.addConfigHandler("mqtt",  &oMQTTController);
+    
+    // Register modules for status infos
+    Appl.addStatusHandler("wifi",  &oWiFiController);
+    Appl.addStatusHandler("app",   &AppStatus);
+    Appl.addStatusHandler("onair", &oOnAirLight);
+    Appl.addStatusHandler("mqtt",  &oMQTTController);
+    Appl.addStatusHandler("bat",   &oBatMeasure);
+    
+    Appl.addConfigHandler("rf433", &oRF433Receiver);
+    Appl.addStatusHandler("rf433", &oRF433Receiver);
 
-  // Now init the application and load the configuration.
-  Appl.init(APP_NAME, APP_VERSION);
-  
-  if(bLoadConfig) {
-    AppStatus.configLoaded = Appl.readConfigFrom(fileExists(CONFIG_FILE) ? CONFIG_FILE : "/default.json");
-  } else {
-    AppStatus.configLoaded = false;
-  }
 }
 
 /// @brief Dispatch the received 433 MHz messages.
@@ -120,8 +115,8 @@ void dispatchRadio433() {
     if(ulData != 0) {
       if(AppStatus.pScanRF433Requestor) {
         // Scan Code request from frontend ?
-        StaticJsonDocument<512> oMsg;
-        JsonObject oPayload = oWebSocket.createPayloadStructure("update","rf433code",oMsg);
+        JSON_DOC_STATIC(oMsg,512);
+        JsonObject oPayload = LSC::createPayloadStructure("update","rf433code",oMsg);
         oPayload["on"] = ulData;
         DEBUG_INFO(" - sending received code on websocket...");
         oWebSocket.sendJsonDocMessage(oMsg,nullptr,AppStatus.pScanRF433Requestor);
@@ -207,64 +202,76 @@ void updateStatusLED() {
 ///   - WiFi Controller
 ///   - WebServer and WebSockets
 void setup() {
-  // Serial Port Setup and Application init...
-  Serial.begin(115200);
-  DEBUG_INFOS("\nInitializing application: \"%s\" Version: %s\n",APP_NAME,APP_VERSION);
-  setupFS();
-  bool bButtonIsPressed = oButton.isPressed();
-  setupAppl(!bButtonIsPressed);
+    // Serial Port Setup and Application init...
+    Serial.begin(115200);
+    DEBUG_INFOS("\nInitializing application: \"%s\" Version: %s\n",APP_NAME,APP_VERSION);
+    // register the modules...
+    registerModules();
 
-  oRgbLed.setColor(RGB_COLOR::BLUE);
+    // Now init the application and load the configuration.
+    Appl.init(APP_NAME, APP_VERSION);
+    
+    if(!oButton.isPressed()) {
+        AppStatus.configLoaded = Appl.readConfigFrom(JSON_APPL_CONFIG_FILE);
+    } else {
+        AppStatus.configLoaded = false;
+    } 
 
-  Appl.sayHello();
-  Appl.printDiag();
-  Appl.Log.logInfo(F("Initializing services..."));
+    oRgbLed.setColor(RGB_COLOR::BLUE);
+
+    Appl.sayHello();
+    Appl.printDiag();
+    ApplLogInfo(F("Initializing services..."));
  
-  // Start the WiFi - with config, if it could be loaded and no button is pressed !
-  oWiFiController.startWiFi(AppStatus.configLoaded && !oButton.isPressed());
+    // Start the WiFi - with config, if it could be loaded and no button is pressed !
+    oWiFiController.startWiFi(AppStatus.configLoaded && !oButton.isPressed());
 
+    ApplLogInfo(F("..initializing web"));
+    registerWebRoutes(oWebServer);  
+    registerWebApis(oWebServer);
+    oWebServer.addMiddleware(&oCorsMiddleware);
+    oWebServer.addMiddleware(&oTestMW);
+    oWebServer.addHandler(&oWebSocket);
+    oWebServer.begin();
+
+    ApplLogInfo(F("..initializing mqtt"));
+    oMQTTController.setup();
   
-  oWebServer.addMiddleware(&oCorsMiddleware);
-  oWebServer.addMiddleware(&oTestMW);
-  oWebServer.addHandler(&oWebSocket);
-  oWebServer.begin();
-  
-  oMQTTController.setup();
-  
-  oButton.startMonitoring();
-  oRF433Receiver.setup();
+    oButton.startMonitoring();
+    ApplLogInfo(F("..initializing rf433"));
+    oRF433Receiver.setup();
 
-  /// Signal the start of the application
-  Appl.Log.logInfo(F("Hello world... - let's start the show!"));
-  oRgbLed.showStartupFlashLight(250);
+    /// Signal the start of the application
+    ApplLogInfo(F("Hello world... - let's start the show!"));
+    oRgbLed.showStartupFlashLight(250);
 
-  oOnAirLight.switchOn();
-  delay(200);
-  oOnAirLight.switchOff();
+    oOnAirLight.switchOn();
+    delay(200);
+    oOnAirLight.switchOff();
 
-  #ifdef DEBUGINFOS
-    runDebugTests();
-  #endif
+    #ifdef DEBUGINFOS
+        runDebugTests();
+    #endif
 }
 
 void loop() {
 
-  // The WebServer is handling already the GET/POST/WebSocket requests 
-  // so look for new messages to be processed on the websocket
-  oWebSocket.dispatchMessageQueue();
+    // The WebServer is handling already the GET/POST/WebSocket requests 
+    // so look for new messages to be processed on the websocket
+    oWebSocket.dispatchMessageQueue();
 
-  oMQTTController.publishHeartBeat();
+    oMQTTController.publishHeartBeat();
 
-  dispatchRadio433();
+    dispatchRadio433();
  
-  // Set the status lights / messages
-  updateStatusLED();
+    // Set the status lights / messages
+    updateStatusLED();
 
-  // dispatch the requested actions...
-  dispatchActions();
+    // dispatch the requested actions...
+    dispatchActions();
 
-  // Set the OnAir Light to desired status
-  oOnAirLight.updateLightStatus();
+    // Set the OnAir Light to desired status
+    oOnAirLight.updateLightStatus();
 
 }
 

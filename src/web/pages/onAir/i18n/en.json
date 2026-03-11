@@ -1,0 +1,29 @@
+{
+
+    "OnAir": {
+        "legend":"On Air Settings",
+        "desc": "Setup the behaviour of your OnAir Lamp.",
+        "mic": {
+            "text": "Microphone",
+            "info": "Select the action, when an active microphone is detected"
+        },
+        "cam": {
+            "text": "Camera",
+            "info": "Select the action, when an active camera is detected"
+        },
+        "priority": {
+            "text": "Priority",
+            "info": "Does the the camera or the microphone setting has priority, if both are on"
+        },
+        "bright": {
+            "text": "Brightness (%)",
+            "info": "Select the maximal brightness in percent"
+        },
+        "A": {
+            "0" : "Do nothing",
+            "on": "Permanent light",
+            "blink": "Blink the light",
+            "wave": "Wave the light"
+        }
+    }
+}

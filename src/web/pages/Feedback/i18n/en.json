@@ -1,0 +1,19 @@
+{
+    "menu": {
+        "Feedback": "Feedback"
+    },
+    "Feedback": {
+        "legend": "Feedback",
+        "desc": "You have trouble with the software? You have a feature request? Don't worry, contact the development team...",
+        "doc": "Documentation",
+        "docText": "Open the online documentation (maybe your question is already answered there).",
+        "docBtn": "Handbooks",
+        "docUrl": "$(GitHubPage)/blob/main/doc/Taupunkt%20Schalter%20-%20Handbuch.pdf",
+        "email": "Send a mail",
+        "emailText": "Send a mail to contact us (it's not possible to send gifts with mail, but you can ask how to transfer 🙈).",
+        "emailBtn": "Send Mail",
+        "github": "Via GitHub",
+        "githubText": "Open an issue on GitHub (for bugs and feature requests).",
+        "githubBtn": "Open Issue"
+    }
+}

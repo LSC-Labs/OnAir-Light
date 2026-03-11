@@ -80,7 +80,6 @@ function loadProjectPackageFile() {
     return(bResult);
 }
 
-
 function getLongVersionString() {
     return(oVersionData.major + "." + oVersionData.minor + "." + oVersionData.patch + "." + oVersionData.build);
 }
@@ -89,8 +88,6 @@ function showCurrentVersion() {
     console.log(" - Prog Name : " + oVersionData.name);
     console.log(" - Version   : " + getLongVersionString());
 }
-
-
 
 function updateVersionFile() {
     console.log("---> update version file...")

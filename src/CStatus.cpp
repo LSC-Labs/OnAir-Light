@@ -6,7 +6,7 @@
 #include <DevelopmentHelper.h>
 
 
-int CStatus::receiveEvent(void *pSender, int nMsgType, const void *pMessage, int nClass) {
+int CStatus::receiveEvent(const void * pSender, int nMsgType, const void *pMessage, int nMsgInfo) {
     switch(nMsgType) {
         case MSG_REBOOT_REQUEST: isRebootPending = true; break;
         case MSG_BUTTON_ON     : isButtonPressed = true; DEBUG_INFO("--- button ON"); break;

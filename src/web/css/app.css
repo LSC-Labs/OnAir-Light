@@ -1,0 +1,18 @@
+:root {
+  --color-temp: rgb(203, 71, 41);
+  --color-humidity: var(--sidebar-bg-color);
+}
+/**************/
+
+.OnAirLight {
+  text-align: center;
+  font-size: 6em;
+  font-weight: bold;
+  color:white;
+  
+}
+.OnAirActive {
+  background-color: brown;
+}
+
+

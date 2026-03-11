@@ -1,0 +1,105 @@
+
+<!--
+    RF433 Page with Edit Dialog to create new remotes, learn remotes and edit existing one.
+-->
+<div id="RF433Page" data-menu='{"name":"Settings|RF433","title":"RF433", "icon":"Remote"}'>
+    <legend data-i18n="RF433.legend"></legend>
+    <div class="pageDesc" data-i18n="RF433.desc"></div>
+
+    <!-- RF433 EditDialog -->
+    <dialog id="editRF344Dialog" class="modalDialog">
+        <div class="dialogHeader"></div>
+        <div class="dialogBody">
+            <!-- RF433 Code edit with scan for new code button -->
+            <div class="row form-group">
+                <div class="col-xs-4"><label data-i18n="RF433.code"></label></div>
+                <div class="col-xs-8">
+                    <!-- 
+                        For validation reason, always keep a valid value inside 
+                        otherwise, the save button of the page will be disabled when detecting
+                        this field does not fullfill the validation requirements (!)
+                     -->
+                    <input  id="dlg_on" class="new-mode"
+                            pattern="^0x[0-9A-Fa-f]*$|^[0-9]*$" 
+                            required value="1">
+                    <button id="scanRF433" type="button"
+                            class="btn btn-default pull-right new-mode" 
+                            data-i18n="RF433.scan"></button>
+                </div>
+            </div>
+            <!-- Device (Camera / Microphone) that should react -->
+            <div class="row form-group">
+                <div class="col-xs-4"><label data-i18n="RF433.device"></label></div>
+                <div class="col-xs-8">
+                    <select id="dlg_msg" class="form-control input-sm sta-mode" >
+                        <option value=1 data-i18n="RF433.mic">M</option>
+                        <option value=0 data-i18n="RF433.cam">C</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Switch on or off -->
+            <div class="row form-group">
+                <div class="col-xs-4">
+                    <label data-i18n="RF433.on_off">1/0</label>
+                </div>
+                <div class="col-xs-8">
+                    <select id="dlg_cmd" class="form-control input-sm sta-mode" >
+                        <option value=0 data-i18n="RF433.cmd.0"></option>
+                        <option value=1 data-i18n="RF433.cmd.1"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="dialogFooter">
+            <button type="button" class="btn btn-secondary btn-sm" 
+                    style="min-width: 5em"
+                    data-i18n="main.cancel" data-dismiss="modal">C</button>
+            <button type="button" class="btn btn-primary btn-sm pull-right" id="setRF433Btn" 
+                    style="min-width: 5em"
+                    data-i18n="main.saveBtn">U</button>
+        </div>
+    </dialog>
+
+    <!-- Enable / Disable the RF433 feature -->
+    <div class="row form-group" data-auth="RO">
+        <label class="$(col-label-class) info-icon" data-i18n="@title:RF433.enable.info">
+            <span data-i18n="RF433.enable"></span>
+            <icon data-icon="Info"></icon>
+        </label>
+        <div class="$(col-input-class)">
+            <input type="checkbox" data-cfg="enabled"></input>
+            <span data-i18n="RF433.enable.button"></span>
+        </div>
+    </div>
+
+    <!-- List of known remote codes -->
+    <div class="row form-group" data-auth="RO">
+        <label class="col-xs-12" data-i18n="RF433.known"></label>
+        <div class=" col-xs-12 col-md-10">
+            <div class="panel panel-default table-responsive">
+                <table id="listOfCodes" class="table table-hover table-striped table-condensed">
+                    <thead>
+                        <th data-i18n="RF433.code"></th>
+                        <th data-i18n="RF433.device"></th>
+                        <th data-i18n="RF433.switch"></th>
+                        <th></th>
+                    </thead>
+                    <!-- 
+                        The Table ID is necessary, to insert the code table from config.
+                        Do not change here, without changing also in the page.js file
+                    -->
+                    <tbody id="knownCodes"></tbody>
+                </table>
+            </div>
+        </div>
+        <!-- A simple button to insert / add new remotes-->
+        <div class="col-xs-12">
+            <button id="addRF433Btn"
+                    class="btn btn-success btn-sm pull-left rf433-modified"
+                    style="width:8em" data-i18n="RF433.addNew"></button>
+        </div>
+    </div>
+
+    <!-- The default save button -->
+    <div class="row form-group" data-element-type="save-btn-row"></div>
+</div>
