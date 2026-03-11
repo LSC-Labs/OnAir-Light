@@ -1,6 +1,6 @@
 # OnAir Light
-![OnAirLight](doc/IMG_7826.png)
-Informs those around you about active transmission and prevents accidental "disturbance" or other unpleasant situations by third parties while you are conducting a meeting. Clients for different platforms can use the light to automatic signal their state. A Windows notifier is available - when a session starts, the light will be switched on and of automatically by this module.
+![OnAirLight](doc/resources/IMG_7826.png)
+The light informs those around you about active audio and video transmission and prevents accidental "disturbance" or other unpleasant situations by third parties while you are conducting a meeting. Clients for different platforms can use the light to automatic signal their state. A Windows notifier is available - when a session starts, the light will be switched on and of automatically by this module.
 
 For this reason this software supports standard OnAir Lights by extending them with the following features:
 - Automatic detection of active cameras.
@@ -18,7 +18,7 @@ For this reason this software supports standard OnAir Lights by extending them w
 - Reboot and Factory Reset functions.
 
 ## What is "inside"
-![OnAirLight](doc/IMG_7761.jpeg)
+![OnAirLight](doc/resources/IMG_7761.jpeg)
 Based on a Wemos D1 mini, additional hardware is in place:
 - Li-Ion Battery charger / USV
 - Li-Ion Battery itself
@@ -29,10 +29,9 @@ Based on a Wemos D1 mini, additional hardware is in place:
 - Enhanced RF433 antenna.
 - Additional button to toggle the light or to restart / reset to default settings.
 
-## Build the program
-The program is per default designed for the Wemos D1 mini in debug mode and is using currently supported runtimes. The debug version writes a lot of information at the serial port and you can configure what should be reported by the -D compiler flags.
-You can identify the debug version in the GUI by the attched "-D" in the release string.
+## Target board
+The program is designed to use the D1 mini as it is cheap and simple and is using the PLibESPV1 runtime environment.
 
-If you want to build the "release" version, you have to select it explicit in the PlatformIO GUI. Be aware, the build counter will increase the build number.
+## Used runtime
+If you want to know how to use the runtime and to modifiy enhance the project, you can find the description in  [the Wiki of runtime](https://github.com/LSC-Labs/PLibESPV1/wiki).
 
-The firmware is stored in the "bin" folder (debug and release) and you can upload it to the module via the OTA feature.
