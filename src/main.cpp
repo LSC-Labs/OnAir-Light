@@ -84,9 +84,11 @@ void runDebugTests() {
 /// @brief Register all Appl modules (Status/Config) and initialize the application
 /// and load the configuration file, if button is not pressed.
 void registerModules() {
-    // Register modules to listen on the Appl-Message bus
+    // Register modules to listen at the Appl-Message bus
     Appl.MsgBus.registerEventReceiver(&AppStatus);
     Appl.MsgBus.registerEventReceiver(&oOnAirLight);
+    Appl.MsgBus.registerEventReceiver(&oWiFiController);
+    Appl.MsgBus.registerEventReceiver(&oWebSocket);
     
     // Register modules with configuration
     Appl.addConfigHandler("web",   &oWebServer);
