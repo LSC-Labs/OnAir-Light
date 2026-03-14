@@ -1,7 +1,7 @@
 {
     "DebugMode": true,
     "prog_name": "OnAir Light",
-    "prog_version": "2.0.0.6-T",
+    "prog_version": "2.0.0.14-T",
     "uptime": "00:10:02",
     "starttime": 78,
     "now": 22325,
@@ -17,7 +17,7 @@
     "fs_total": 1024000,
     "fs_used": 16384,
     "bat": {
-        "power": 3.4,
+        "volt": 3.4,
         "available": true,
         "raw": 973
     },

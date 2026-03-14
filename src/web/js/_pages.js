@@ -105,7 +105,8 @@ class CStatusPage extends CPageHandler {
     }
 
     
-}/**
+}
+/**
   @PageBuilder:register(InfoPage,CInfoPage)
  */
 
@@ -226,7 +227,8 @@ class CInfoPage extends CPageHandler {
         return(bIsActive);
     }
 
-}/**
+}
+/**
  * The System Page with Restart / Reset
  * 
  * @PageBuilder:register(SystemPage,CSystemPage)
@@ -272,7 +274,8 @@ class CSystemPage extends CPageHandler {
             }
         }
     }
-}/**
+}
+/**
  * Represents a WiFi Setting page
  * 
  * @PageBuilder:register(WiFiPage,CWiFiPage) 
@@ -367,6 +370,7 @@ class CWiFiPage extends CPageHandler {
     }
 }
 
+
 /**
  * Page Handler class for Backup / Restore Page
  * 
@@ -448,7 +452,8 @@ class CBackupPage extends CPageHandler {
             }
         }
     }
-}/**
+}
+/**
  * Firmware Download / Install page
  * 
  * @PageBuilder:register(FirmwarePage,CFirmwarePage)
@@ -527,7 +532,8 @@ class CFirmwarePage extends CPageHandler {
         }
     }
 
-}// #region RF433 Module definition (script)
+}
+// #region RF433 Module definition (script)
 
 /** 
  * RF433 names and constants
@@ -837,6 +843,7 @@ class CRF433Page extends CPageHandler {
 }
 
 // #endregion
+
 
 // Page Handler Registration
 function registerPageHandler(pApp) {
