@@ -37,6 +37,25 @@
       "waitmsg": "Please wait until process is finished..."
     }
   },
+  "Info": {
+    "legend": "Overview",
+    "clients": "Clients",
+    "noClients": "No clients connected...",
+    "none": "-",
+    "cam": "Camera",
+    "micro": "Microphone",
+    "panel": {
+      "clients": "Current clients",
+      "device": "Device"
+    },
+    "groupname": "Device",
+    "battery": "Battery",
+    "intern": "Indoor",
+    "extern": "Outdoor",
+    "dewpoint": "Dew Point",
+    "temp": "Temperature",
+    "hum": "Humidity"
+  },
   "Status": {
     "legend": "Status of $(prog_name) Ver.: $(prog_ver)",
     "panel": {
@@ -74,25 +93,6 @@
       "ID": "Sensor (Indoor)",
       "dewpoint": "DP"
     }
-  },
-  "Info": {
-    "legend": "Overview",
-    "clients": "Clients",
-    "noClients": "No clients connected...",
-    "none": "-",
-    "cam": "Camera",
-    "micro": "Microphone",
-    "panel": {
-      "clients": "Current clients",
-      "device": "Device"
-    },
-    "groupname": "Device",
-    "battery": "Battery",
-    "intern": "Indoor",
-    "extern": "Outdoor",
-    "dewpoint": "Dew Point",
-    "temp": "Temperature",
-    "hum": "Humidity"
   },
   "System": {
     "title": "Restart or Reset",
@@ -282,19 +282,17 @@
       "text": "Edit",
       "title": "Edit the remote"
     },
+    "add": {
+      "text": "Add",
+      "title": "Add a new remote"
+    },
     "del": "Delete",
     "scan": "Scan",
     "on_off": "On / Off",
     "cmd": {
       "0": "Off",
       "1": "On"
-    },
-    "set": "Save",
-    "add": {
-      "text": "Add",
-      "title": "Add a new remote"
-    },
-    "save": "Save"
+    }
   },
   "OnAir": {
     "legend": "On Air Settings",
@@ -320,6 +318,47 @@
       "on": "Permanent light",
       "blink": "Blink the light",
       "wave": "Wave the light"
+    }
+  },
+  "Clients": {
+    "legend": "Available clients",
+    "desc": "Download and install the client for your operating system.<br/>As most of the clients are signed, you can use and install the certificates first.",
+    "Certs": {
+      "text": "Certificates",
+      "desc": "To limit the risk, the software is signed with certificates from LSC-Labs.<br/>Install the root and the intermediate certificates from first - be sure you are installing it from the correct page."
+    },
+    "Win": {
+      "text": "Windows Clients",
+      "desc": [
+        "The easiest way to install the software is to use the one click deploy feature (MS).",
+        " You will stay up to date and get the software immediately.",
+        " Microsoft uses an executable file, with the name \"setup.exe\".",
+        " From security point of view, this is not a good idea, but it is the easiest way",
+        " to install the software and keep it up to date."
+      ],
+      "click": {
+        "html": [
+          "Microsoft uses an executable file, with the name \"setup.exe\".",
+          " From security point of view, this is not a good idea,",
+          " but it is the easiest way to install the software and keep it up to date."
+        ],
+        "title": "One click deploy"
+      },
+      "port": {
+        "html": [
+          "Download the software (zip package) and choose a folder to unpack the software (i.E. C:\\Apps\\OnAirNotifier).<br/>",
+          " As it is a portable version, you can start the software from any location (also from a USB stick)",
+          " by starting the OnAirNotifier.exe.<br/>",
+          "Be aware, that you have also a security risk, so ensure you are on the right download page!"
+        ],
+        "title": "Portable Version"
+      },
+      "fw": {
+        "html": [
+          "The framework version can be used, if you aren't able to install the .net runtime in lack of admin rights."
+        ],
+        "title": "Framework Version"
+      }
     }
   }
 }

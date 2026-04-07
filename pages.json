@@ -18,18 +18,18 @@
 
     "usePages": [
         "lib/PLibESPV1/src/web/pages/_Defaults",
-        "src/web/pages/Status",
         "src/web/pages/Info",
+        "src/web/pages/Status",
         "lib/PLibESPV1/src/web/pages/System",
         "lib/PLibESPV1/src/web/pages/WiFi",
         "lib/PLibESPV1/src/web/pages/MQTT",
         "lib/PLibESPV1/src/web/pages/Device",
-        "src/web/pages/DewPoint",
         "lib/PLibESPV1/src/web/pages/Backup",
         "lib/PLibESPV1/src/web/pages/Firmware",
         "src/web/pages/Feedback",
         "src/web/pages/RF433",
-        "src/web/pages/OnAir"
+        "src/web/pages/OnAir",
+        "src/web/pages/Clients"
     ],
 
     "sync" : {

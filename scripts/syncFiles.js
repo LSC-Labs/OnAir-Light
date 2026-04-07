@@ -150,6 +150,8 @@ function syncFile(strSourceFile, strTargetFile, strDirection) {
 }
 
 async function syncFileList(cb) {
+    console.log("syncing files " );
+    console.log(Settings.getData("sync.files"));
     Settings.getData("sync.files",[]).forEach((strInstruction) => {
         console.log(` - parsing: "${strInstruction}"`) ;
         let oRegEx = new RegExp("^(?<source>[\\/\\._a-zA-Z0-9]*)\\s*(?<cmd>[<=>]{1,2})\\s*(?<target>.*)$");

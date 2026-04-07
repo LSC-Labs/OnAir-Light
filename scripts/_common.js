@@ -82,7 +82,7 @@ export class Utils {
     }
 
     static isObj(oData) {
-        return(oData != null && typeof oData === 'object');
+        return(oData != null && typeof oData === 'object' && !Array.isArray(oData));
     }
 
     static isString(oData) {
@@ -315,6 +315,7 @@ export class CConfig {
 
     mergeSection(strSectionName, oAddSection) {
         // console.log("mergin section....:" + strSectionName);
+        // TODO: join array also...
         let oSection = this.getSection(strSectionName,true)
         // console.log(" --- org:");
         // console.log(oSection);

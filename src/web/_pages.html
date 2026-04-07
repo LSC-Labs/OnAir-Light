@@ -32,7 +32,26 @@
 
         "val-IP":"^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
     }
-</VarTable> <!-- 
+</VarTable> <div id="InfoPage" >
+     <!-- Status of $(prog_name) Ver.: $(prog_ver) -->
+    <legend data-i18n="Info.legend"></legend>
+     <div class="row">
+        <div class="col-xs-12">
+            <div class="groupPanel">
+                <div class="OnAirLight">On Air</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="groupPanel">
+                <div class="groupPanelHeader" data-i18n="Info.clients"></div>
+                <table id="client-table" class="table table-hover  table-condensed">
+                </table>
+            </div>
+        </div>
+    </div>
+</div><!-- 
     Status - Page for Dew Point Switch
 -->
 <div id="StatusPage">
@@ -162,25 +181,6 @@
                         <th data-i18n="Status.disconReason"></th>
                         <td data-cfg="mqtt_disconReason"></td>
                     </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-</div><div id="InfoPage" >
-     <!-- Status of $(prog_name) Ver.: $(prog_ver) -->
-    <legend data-i18n="Info.legend"></legend>
-     <div class="row">
-        <div class="col-xs-12">
-            <div class="groupPanel">
-                <div class="OnAirLight">On Air</div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="groupPanel">
-                <div class="groupPanelHeader" data-i18n="Info.clients"></div>
-                <table id="client-table" class="table table-hover  table-condensed">
                 </table>
             </div>
         </div>
@@ -872,4 +872,50 @@
     </div>
 
     <div class="row form-group" data-element-type="save-btn-row"></div>
-</div> 
+</div> <div id="ClientsPage" 
+    data-menu='{"name":"Maintenance|Clients","title":"Clients", "icon":"Envelope"}'>
+    <legend data-i18n="Clients.legend"></legend>
+    <div class="pageDesc" data-i18n="Clients.desc" ></div>
+
+
+     <div class="row form-group actionPanel"> 
+        <legend data-i18n="Clients.Certs"></legend>
+        <div data-i18n="Clients.Certs.desc"></div>
+        <div class="col-xs-8">
+            <span data-i18n="Client.Certs.desc"></span> <a target="certs" href="https://lsc-labs.de/Certificates">https://lsc-labs.de/Certificates</a>>
+        </div>
+        <div class="col-xs-4">
+            <button class="btn btn-primary btn-sm" style="min-width:10em"  onclick='window.open("//lsc-labs.de/Certificates/LSC_(Root)_CA.crt");'>LSC Root Cert</button>
+            <button class="btn btn-primary btn-sm" style="min-width:10em"  onclick='window.open("//lsc-labs.de/Certificates/LSC_Labs_CA.crt");'>LSC-Labs Cert</button>
+        </div>
+    </div>
+
+     <div class="row form-group actionPanel"> 
+        <legend data-i18n="Clients.Win"></legend>
+        <div class="col-xs-12" data-i18n="Clients.Win.desc"></div>
+
+        <div class="col-xs-12">
+            <h3 data-i18n="Clients.Win.click.title"></h3>
+            <div data-i18n="Clients.Win.click.html"></div>
+        </div>
+        <div class="col-xs-12">
+            <button class="btn btn-primary btn-sm" style="min-width:10em"  onclick='window.open("//lsc-labs.de/Software/OnAirNotifier/Publish");'>Download</button>
+        </div>
+
+        <div class="col-xs-12">
+            <h3 data-i18n="Clients.Win.port.title"></h3>
+            <div data-i18n="Clients.Win.port.html"></div>
+        </div> 
+        <div class="col-xs-12">
+            <button class="btn btn-primary btn-sm" style="min-width:10em"  onclick='window.open("//lsc-labs.de/Software/OnAirNotifier/OnAirNotifier.zip");'>Download</button>
+        </div>
+
+        <div class="col-xs-12">
+            <h3 data-i18n="Clients.Win.fw.title"></h3>
+            <div data-i18n="Clients.Win.fw.html"></div>
+        </div>
+        <div class="col-xs-12">
+            <button class="btn btn-primary btn-sm" style="min-width:10em"  onclick='window.open("//lsc-labs.de/Software/OnAirNotifier/OnAirNotifier.zip");'>Download</button>
+        </div>
+    </div>
+</div>
