@@ -1,6 +1,6 @@
 {
   "name": "onair-light",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "On Air Light - automatic light on open mic/cam",
   "main": "index.js",
   "type": "module",
