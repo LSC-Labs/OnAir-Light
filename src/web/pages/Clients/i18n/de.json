@@ -1,0 +1,26 @@
+{
+
+    "Clients":{
+        "legend": "Verfübgare Clients",
+        "desc": "Installieren Sie das Module für ihr Betriebssystem. Zu ihrer Sicherheit sind diese signiert.",
+        "Certs": {
+            "text": "Zertifikate",
+            "desc": "Um das Security Risiko zu minimieren, sind die Module von LSC-Labs signiert.<br/>Installieren Sie daher die Root und Intermediate Zertifikate zuerst um eine Validierung zu ermöglichen.",
+            "page": "Zertifikate Download",
+            "root": "Root Cert",
+            "inter": "Intermediate Cert"
+        },
+        "html": [
+            "Die verfügbaren Module für Windows, Linux und MacOS - (derzeit in Entwicklung) sind auf der Dowload Seite verfügbar.",
+            "<br/><br/>Für Windows gibt es verschiedene Versionen: One click deploy (MS) und portable Versionen, je für die .Net und Net Framework Laufzeitumgebung.",
+            "<ul>",
+            "<li>Die one click deploy Version ist am einfachsten zu installieren und hält sich selbst auf dem neusten Stand.",
+            "<br/>Um das Sicherheitsrisiko für Sie zu minimieren sind diese Versionen signiert.<br/>",
+            "Die Installation erfolgt im Userkontext und benötigt keine administrativen Rechte.</li>",
+            "<li>Die portablen Versionen sind eine gute Option wenn Sie diese auf einen USB Stick installieren wollen, oder wenn Sie keine Einträge in dem Zielsystem hinterlegen wollen.</li>",
+            "</ul>"
+        ],
+        "page": "Clients",
+        "downloadLink": "Clients download page"
+    }
+}

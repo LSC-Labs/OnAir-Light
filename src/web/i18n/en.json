@@ -325,40 +325,24 @@
     "desc": "Download and install the client for your operating system.<br/>As most of the clients are signed, you can use and install the certificates first.",
     "Certs": {
       "text": "Certificates",
-      "desc": "To limit the risk, the software is signed with certificates from LSC-Labs.<br/>Install the root and the intermediate certificates from first - be sure you are installing it from the correct page."
+      "desc": "To limit the risk, the software is signed with certificates from LSC-Labs.<br/>Install the root and the intermediate certificates from first - be sure you are installing it from the correct page.",
+      "page": "Certificate downloads",
+      "downBtn": "Download",
+      "downRoot": "Root Cert",
+      "downInter": "Intermediate Cert",
+      "root": "Root Cert",
+      "inter": "Intermediate Cert"
     },
-    "Win": {
-      "text": "Windows Clients",
-      "desc": [
-        "The easiest way to install the software is to use the one click deploy feature (MS).",
-        " You will stay up to date and get the software immediately.",
-        " Microsoft uses an executable file, with the name \"setup.exe\".",
-        " From security point of view, this is not a good idea, but it is the easiest way",
-        " to install the software and keep it up to date."
-      ],
-      "click": {
-        "html": [
-          "Microsoft uses an executable file, with the name \"setup.exe\".",
-          " From security point of view, this is not a good idea,",
-          " but it is the easiest way to install the software and keep it up to date."
-        ],
-        "title": "One click deploy"
-      },
-      "port": {
-        "html": [
-          "Download the software (zip package) and choose a folder to unpack the software (i.E. C:\\Apps\\OnAirNotifier).<br/>",
-          " As it is a portable version, you can start the software from any location (also from a USB stick)",
-          " by starting the OnAirNotifier.exe.<br/>",
-          "Be aware, that you have also a security risk, so ensure you are on the right download page!"
-        ],
-        "title": "Portable Version"
-      },
-      "fw": {
-        "html": [
-          "The framework version can be used, if you aren't able to install the .net runtime in lack of admin rights."
-        ],
-        "title": "Framework Version"
-      }
-    }
+    "html": [
+      "The available client software can be found on the download page.<br/>The software is available for Windows, Linux and MacOS - (under construction).",
+      "<br/><br/>For Windows, there are several different versions available: One click deploy (MS) and portable versions for .Net and Net Framework.",
+      "<ul>",
+      "<li>The one click deploy version is the easiest way to install the software, but it is not the most secure way to do it.",
+      "<br/>To minimize this risk, this versions are signed, so you can use them without worry about.</li>",
+      "<li>The portable versions are a good option if you want to use the software on a USB stick or if you don't want to change the target system.</li>",
+      "</ul>"
+    ],
+    "page": "Clients",
+    "downloadLink": "Clients download page"
   }
 }
