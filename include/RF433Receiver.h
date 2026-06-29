@@ -1,6 +1,6 @@
 #pragma once
 #ifdef RADIO_433_RECEIVER_PIN
-#include <ArduinoJson.h>
+#include <JsonNode.h>
 #include <RF433Receiver.h>
 #include <RCSwitch.h>
 #include <ConfigHandler.h>
@@ -36,9 +36,9 @@ class CRF433Receiver : public RCSwitch, public IConfigHandler, public IStatusHan
         bool isEnabled();
         bool hasKey(unsigned long);
         RF433Message getMessage(unsigned long);
-        void writeConfigTo(JsonObject &oCfg, bool bHideCritical) override;
-        void readConfigFrom(JsonObject &oCfg) override;
-        void writeStatusTo(JsonObject &oCfg) override;
+        void writeConfigTo(CJsonNode &oCfg, bool bHideCritical) override;
+        void readConfigFrom(CJsonNode &oCfg) override;
+        void writeStatusTo(CJsonNode &oCfg,int nStatus = STATUS_LEVEL_INFO) override;
         // Use to ask for a new message
         unsigned long getReceivedValueOnce(unsigned long ulTimeOut = 20);
         // Or use addMessage and dispatchMessages() - in loop.

@@ -54,17 +54,18 @@ COnAirLight::COnAirLight(int nPin) : CLightSwitch(nPin) {
     this->setBrightness(ONAIR_LIGHT_BRIGHTNESS_DEFAULT);
 }
 
-void COnAirLight::readConfigFrom(JsonObject &oCfg) {
+void COnAirLight::readConfigFrom(CJsonNode &oCfg) {
     DEBUG_FUNC_START();
     DEBUG_JSON_OBJ(oCfg);
-    Config.OnCamMode = getModeByName(oCfg["oncam"],Config.OnCamMode);
-    Config.OnMicMode = getModeByName(oCfg["onmic"],Config.OnMicMode);
-    String strPrio = oCfg["priority"];
+    Config.OnCamMode = getModeByName(oCfg.getValue("oncam"),Config.OnCamMode);
+    Config.OnMicMode = getModeByName(oCfg.getValue("onmic"),Config.OnMicMode);
+    String strPrio = oCfg.getValue("priority");
     if(strPrio) {
         if(strPrio == "mic") Config.Priority = ONAIR_MICRO;
         if(strPrio == "cam") Config.Priority = ONAIR_CAMERA;
     }
-    unsigned long ulBrightness = oCfg["brightness"];
+    unsigned long ulBrightness = 0;
+    oCfg.setValue("brightness,&ulBrightness");
     // If not available, use default.
     if(ulBrightness < 10 || ulBrightness > 100) ulBrightness = ONAIR_LIGHT_BRIGHTNESS_DEFAULT;
     this->setBrightness(ulBrightness);
@@ -79,7 +80,7 @@ void COnAirLight::readConfigFrom(JsonObject &oCfg) {
     DEBUG_FUNC_END();
 }
 
-void COnAirLight::writeConfigTo(JsonObject &oCfg, bool bHideCritical) {
+void COnAirLight::writeConfigTo(CJsonNode &oCfg, bool bHideCritical) {
     DEBUG_FUNC_START();
     setNameOfMode(oCfg,"oncam",Config.OnCamMode);
     setNameOfMode(oCfg,"onmic",Config.OnMicMode);
@@ -89,17 +90,19 @@ void COnAirLight::writeConfigTo(JsonObject &oCfg, bool bHideCritical) {
     DEBUG_FUNC_END();
 }
 
-void COnAirLight::writeStatusTo(JsonObject &oCfg) {
+void COnAirLight::writeStatusTo(CJsonNode &oCfg,int nLevel) {
     oCfg["isMicOn"] = isMicOn();
     oCfg["isCamOn"] = isCamOn();
     oCfg["timeout"] = Config.TimeOutMillis / 1000;
-    JsonArray oArray = CreateJsonArray(oCfg,"clients");
+    // JsonArray oArray = CreateJsonArray(oCfg,"clients");
+    JsonNode * pArray = oCfg.getArray("clients");
     for(auto oClient : tClientStaties) {
-        JsonObject oData = CreateEmptyJsonObject(oArray);//  oArray.createNestedObject();
-        oData["client"] = oClient.first;
-        oData["isCamOn"] = oClient.second.isCamOn;
-        oData["isMicOn"] = oClient.second.isMicOn;
-        oData["lastUpd"] = oClient.second.ulLastUpdate;
+        // JsonObject oData = CreateEmptyJsonObject(oArray);//  oArray.createNestedObject();
+        JsonNode *pData = pArray->createEmptyObject(); 
+        (*pData)["client"] = oClient.first.c_str();
+        (*pData)["isCamOn"] = oClient.second.isCamOn;
+        (*pData)["isMicOn"] = oClient.second.isMicOn;
+        (*pData)["lastUpd"] = oClient.second.ulLastUpdate;
     }
 }
 
@@ -116,7 +119,7 @@ int COnAirLight::getModeByName(String strMode, int nDefault) {
     return(nResult);
 }
 
-String COnAirLight::setNameOfMode(JsonObject &oCfg, const char *strKey, int nMode) {
+String COnAirLight::setNameOfMode(CJsonNode &oCfg, const char *strKey, int nMode) {
     String strMode;
     switch(nMode) {
         case ONAIR_LIGHT_MODE_BLINK : strMode = F("blink"); break;
@@ -191,23 +194,29 @@ void COnAirLight::updateLightStatus() {
 void COnAirLight::dispatchBrokerMessage(const char *pszMessage, int nLen) {
     DEBUG_FUNC_START_PARMS("\"%s\"",pszMessage);
     if(pszMessage && nLen > 10) {
-        JSON_DOC(oMsgDoc,nLen * 4);
+        CJsonNode oMsg;
+        // JSON_DOC(oMsgDoc,nLen * 4);
         // DynamicJsonDocument oMsgDoc(nLen * 4);
-        DeserializationError rc = deserializeJson(oMsgDoc,pszMessage);
-        if(rc == DeserializationError::Ok) {
-            JsonObject oMsg = GetJsonDocumentAsObject(oMsgDoc);
-            String strClient = JsonKeyExists(oMsg,"client",String) ? (const char*) oMsg["client"] : "-anonymous-";
-            if(JsonKeyExists(oMsg,"mic",String))    setClientStatus(strClient, "audio",  oMsg["mic"]);
-            if(JsonKeyExists(oMsg,"audio",String))  setClientStatus(strClient, "audio",  oMsg["audio"]);
-            if(JsonKeyExists(oMsg,"cam",String))    setClientStatus(strClient, "video",  oMsg["cam"]);
-            if(JsonKeyExists(oMsg,"video",String))  setClientStatus(strClient, "video",  oMsg["video"]);
-            if(JsonKeyExists(oMsg,"media",String))  {
-                setClientStatus(strClient, "audio",oMsg["media"]);
-                setClientStatus(strClient, "video",oMsg["media"]);
+        oMsg.parse(pszMessage);
+        // DeserializationError rc = deserializeJson(oMsgDoc,pszMessage);
+        // if(rc == DeserializationError::Ok) {
+            // CJsonNode oMsg; // = GetJsonDocumentAsObject(oMsgDoc);
+            // String strClient = JsonKeyExists(oMsg,"client",String) ? (const char*) oMsg["client"] : "-anonymous-";
+            String strClient = oMsg.getValueAsCharPointer("client","-ananymous-");
+
+            if(oMsg.exists("mic"))      setClientStatus(strClient, "audio", oMsg.getValue("mic"));
+            if(oMsg.exists("audio"))    setClientStatus(strClient, "audio", oMsg.getValue("audio"));
+            if(oMsg.exists("cam"))      setClientStatus(strClient, "video", oMsg.getValue("cam"));
+            if(oMsg.exists("video"))    setClientStatus(strClient, "video", oMsg.getValue("video"));
+            if(oMsg.exists("media"))  {
+                setClientStatus(strClient, "audio",oMsg.getValue("media"));
+                setClientStatus(strClient, "video",oMsg.getValue("media"));
             }
+                /*
         } else {
             DEBUG_INFOS("Json deserialization error %s",rc.c_str());
         }
+            */
     }
 }
 

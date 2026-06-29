@@ -4,7 +4,7 @@
 #ifdef RADIO_433_RECEIVER_PIN
 #include <RF433Receiver.h>
 #include <Appl.h>
-#include <JsonHelper.h>
+#include <JsonNode.h>
 #include <AppMsgs.h>
 #include <OnAirLight.h>
 
@@ -35,19 +35,20 @@ void CRF433Receiver::setup(int nPin) {
 }
 
 
-void CRF433Receiver::writeConfigTo(JsonObject &oCfg, bool bHideCritical){
+void CRF433Receiver::writeConfigTo(CJsonNode &oCfg, bool bHideCritical){
     DEBUG_FUNC_START();
     oCfg["enabled"] = Config.isEnabled;
-    JsonArray tMessageList = CreateJsonArray(oCfg,"msgs");//  oCfg.createNestedArray("msgs");
+    // JsonArray tMessageList = CreateJsonArray(oCfg,"msgs");//  oCfg.createNestedArray("msgs");
+    JsonNode * ptMessageList = oCfg.getArray("msgs");
     for(auto oEntry : this->tMessagesToSend) {
-        JsonObject oData = CreateEmptyJsonObject(tMessageList); //  tMessageList.createNestedObject();
-
+        // JsonObject oData = CreateEmptyJsonObject(tMessageList); //  tMessageList.createNestedObject();
+        JsonNode *pData = ptMessageList->createEmptyObject();
         int nMsg = oEntry.second.MsgId - MSG_ONAIR_BASE;
         if(nMsg < 0 || nMsg > ONAIR_DEVICE_UPPER_LIMIT) nMsg = ONAIR_CAMERA;
 
-        oData["on"]      = oEntry.first;
-        oData["msg"]     = nMsg;
-        oData["type"]    = oEntry.second.MsgType;
+        (*pData)["on"]      = oEntry.first;
+        (*pData)["msg"]     = nMsg;
+        (*pData)["type"]    = oEntry.second.MsgType;
     }
     DEBUG_JSON_OBJ(oCfg);
 };
@@ -55,25 +56,26 @@ void CRF433Receiver::writeConfigTo(JsonObject &oCfg, bool bHideCritical){
 /// @brief read the configuration from the Json Object...
 ///        removes old entries, if "_oper = new"
 /// @param oCfg 
-void CRF433Receiver::readConfigFrom(JsonObject &oCfg){
+void CRF433Receiver::readConfigFrom(CJsonNode &oCfg){
     DEBUG_FUNC_START();
     DEBUG_JSON_OBJ(oCfg);
-    LSC::setJsonValue(oCfg,"enabled",&Config.isEnabled);
-    String strOper = oCfg["_oper"].as<String>();
+    oCfg.storeValueIf("enabled",&Config.isEnabled);
+    String strOper = oCfg.getValue("_oper");
     bool bDeleteExisting = !strOper.equalsIgnoreCase("upd");
     if(bDeleteExisting) this->tMessagesToSend.clear();
-    JsonArray tMessages = oCfg["msgs"];
-    if(tMessages) {
+    // JsonArray tMessages = oCfg["msgs"];
+    CJsonNode *ptMessages = oCfg.getArray("msgs");
+    if(ptMessages) {
         // ToDo: Clear old rf433 infos, if in place - 
         // this module is waiting for the GUI implementation
-        for(JsonObject oMsg : tMessages) {
-            int nConfigMsg = oMsg["msg"];
+        for(CJsonNode *pMsg : ptMessages->Elements) {
+            int nConfigMsg = (*pMsg).getValueAsInt("msg");
             if(nConfigMsg < 0  || nConfigMsg > ONAIR_DEVICE_UPPER_LIMIT) {
                 nConfigMsg = ONAIR_CAMERA;
             }
-            unsigned long ulOn = oMsg["on"];
+            unsigned long ulOn = pMsg->getValueAsUnsignedLong("on");
             int nMsgId         = (nConfigMsg + MSG_ONAIR_BASE);
-            int nMsgType       = oMsg["type"];
+            int nMsgType       = pMsg->getValueAsInt("type");
             this->addMessage(ulOn,nMsgId,nMsgType);
         }
     } 
@@ -81,7 +83,7 @@ void CRF433Receiver::readConfigFrom(JsonObject &oCfg){
 };
 
 
-void CRF433Receiver::writeStatusTo(JsonObject &oCfg) {
+void CRF433Receiver::writeStatusTo(CJsonNode &oCfg, int nLevel) {
     oCfg["enabled"] = Config.isEnabled;
     // oCfg["avty"]    = available();
 };

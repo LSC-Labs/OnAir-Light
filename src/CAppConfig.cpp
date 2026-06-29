@@ -1,13 +1,13 @@
 #include <AppConfig.h>
-#include <JsonHelper.h>
+#include <JsonNode.h>
 
 
 
-void CAppConfig::readConfigFrom(JsonObject &oCfg) {
-    LSC::setJsonValue(oCfg,"autorestart",&AutoRestartTime);
+void CAppConfig::readConfigFrom(CJsonNode &oCfg) {
+    oCfg.setValue("autorestart",&AutoRestartTime);
     //storeSValueIF(&(AppConfig::AutoRestartTime),oCfg["autorestart"]);
 }
 
-void CAppConfig::writeConfigTo(JsonObject &oCfg, bool bHideCritical) {
+void CAppConfig::writeConfigTo(CJsonNode &oCfg, bool bHideCritical) {
     oCfg["autorestart"] = AppConfig::AutoRestartTime;
 }

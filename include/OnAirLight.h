@@ -61,9 +61,9 @@ class COnAirLight : public CLightSwitch, public IConfigHandler, public IStatusHa
     public:
         COnAirLight(int nPin);
         int receiveEvent(const void *pSender, int nMsgId, const void*pMsg, int nMsgInfo) override;
-        void readConfigFrom(JsonObject &oCfg) override;
-        void writeConfigTo(JsonObject &oCfg, bool bHideCritical) override;
-        void writeStatusTo(JsonObject &oStatus) override;
+        void readConfigFrom(CJsonNode &oCfg) override;
+        void writeConfigTo(CJsonNode &oCfg, bool bHideCritical) override;
+        void writeStatusTo(CJsonNode &oStatus,int nLevel = STATUS_LEVEL_INFO) override;
         void updateLightStatus();
         void dispatchBrokerMessage(const char *pszMessage, int nLen);  
         bool isCamOn();
@@ -71,6 +71,6 @@ class COnAirLight : public CLightSwitch, public IConfigHandler, public IStatusHa
 
     private:
         int getModeByName(String strMode,int nDefault);
-        String setNameOfMode(JsonObject &oCfg, const char *pszKey, int nMode);
+        String setNameOfMode(CJsonNode &oCfg, const char *pszKey, int nMode);
         void setClientStatus(String strClientAddress, const char *pszMode, const char *pszCommand);
 };

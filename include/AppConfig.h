@@ -46,8 +46,8 @@ struct AppConfig {
 class CAppConfig : public CConfigHandler, public AppConfig {
         
     public:
-        void writeConfigTo(JsonObject &oCfg, bool bHideCritical) override;
-        void readConfigFrom(JsonObject &oCfg) override;
+        void writeConfigTo(CJsonNode &oCfg, bool bHideCritical) override;
+        void readConfigFrom(CJsonNode &oCfg) override;
 };
 
 

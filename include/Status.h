@@ -12,7 +12,6 @@ class  CStatus : public IMsgEventReceiver, public IStatusHandler {
 
     public:
         virtual int receiveEvent(const void * pSender, int nMsgType, const void * pMessage, int nMsgInfo);
-    
-        virtual void writeStatusTo(JsonObject & oStatusNode);
+        virtual void writeStatusTo(JsonNode & oStatusNode, int nLevel = STATUS_LEVEL_INFO);
 };
 

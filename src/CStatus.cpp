@@ -20,7 +20,7 @@ int CStatus::receiveEvent(const void * pSender, int nMsgType, const void *pMessa
     return(EVENT_MSG_RESULT_OK);
 }
 
-void CStatus::writeStatusTo(JsonObject &oStatusNode) {
+void CStatus::writeStatusTo(JsonNode &oStatusNode, int nLevel) {
     oStatusNode["rebootPending"] = isRebootPending;
     oStatusNode["ButtonPressed"] = isButtonPressed   ? "1" : "0";
     // oStatusNode["RestartWiFi"]   = restartWiFi       ? "1" : "0";

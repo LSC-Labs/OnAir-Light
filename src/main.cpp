@@ -3,7 +3,6 @@
 #include <FileSystem.h>
 #include <Appl.h>
 #include <Status.h>
-#include <JsonHelper.h>
 #include <Button.h>
 #include <RGBLed.h>
 #include <WiFiController.h>
@@ -117,9 +116,11 @@ void dispatchRadio433() {
     if(ulData != 0) {
       if(AppStatus.pScanRF433Requestor) {
         // Scan Code request from frontend ?
-        JSON_DOC_STATIC(oMsg,512);
-        JsonObject oPayload = LSC::createPayloadStructure("update","rf433code",oMsg);
-        oPayload["on"] = ulData;
+        // JSON_DOC_STATIC(oMsg,512);
+        JsonNode oMsg;
+        // JsonObject oPayload = LSC::createPayloadStructure("update","rf433code",oMsg);
+        JsonNode *pPayload = oMsg.createPayloadStructure("update","rf433code");
+        (*pPayload)["on"] = ulData;
         DEBUG_INFO(" - sending received code on websocket...");
         oWebSocket.sendJsonDocMessage(oMsg,nullptr,AppStatus.pScanRF433Requestor);
         AppStatus.pScanRF433Requestor = nullptr;
