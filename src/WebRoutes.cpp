@@ -13,7 +13,7 @@
 #endif
 
 #include <WebServer.h>
-#include <JsonHelper.h>
+#include <JsonNode.h>
 #include <web/index.html.gz.h>
 #include <web/app.css.gz.h>
 #include <web/index.js.gz.h>
@@ -22,6 +22,7 @@
 #include <web/_runtime.js.gz.h>
 #include <web/_pages.html.gz.h>
 #include <web/_pages.js.gz.h>
+#include <web/_pages.css.gz.h>
 #include <web/de.json.gz.h>
 #include <web/en.json.gz.h>
 
@@ -35,12 +36,12 @@ void sendGzipResponse(AsyncWebServerRequest *pRequest, AsyncWebServerResponse *p
     DEBUG_FUNC_END();
 }
 
-void sendJsonResponse(JsonDocument &oDoc, AsyncWebServerRequest *pRequest) {
+void sendJsonResponse(JsonNode &oDoc, AsyncWebServerRequest *pRequest) {
     DEBUG_FUNC_START();
     DEBUG_INFOS("WEB: %s",pRequest->url().c_str());
     DEBUG_JSON_OBJ(oDoc);
     AsyncResponseStream *pStream =  pRequest->beginResponseStream(F("application/json"));
-    serializeJson(oDoc, *pStream);
+    pStream->write(oDoc.getAsJsonText());
     pRequest->send(pStream);
     DEBUG_FUNC_END();
 }
@@ -48,7 +49,6 @@ void sendJsonResponse(JsonDocument &oDoc, AsyncWebServerRequest *pRequest) {
 
 
 void registerWebRoutes(CWebServer &oWebServer) {
-    DEBUG_FUNC_START();
     oWebServer.registerDefaults();
     oWebServer.registerFileAccess();
     
@@ -79,6 +79,16 @@ void registerWebRoutes(CWebServer &oWebServer) {
                             F("text/css"),
                             _runtime_css_gz, 
                             _runtime_css_gz_len)
+                        );
+	});
+
+     oWebServer.on("/css/_pages.css", HTTP_GET, [](AsyncWebServerRequest *request) {
+		sendGzipResponse(request,
+                         request->beginResponse_P(
+                            200,
+                            F("text/css"),
+                            _pages_css_gz, 
+                            _pages_css_gz_len)
                         );
 	});
 
@@ -153,15 +163,14 @@ void registerWebRoutes(CWebServer &oWebServer) {
 	});
     
     oWebServer.on("/apiV1/status", HTTP_GET, [](AsyncWebServerRequest *request) {
-        JSON_DOC(oStatus,4096);
-        Appl.writeStatusTo(oStatus);
+        CJsonNode oStatus;
+        Appl.writeStatusTo(oStatus,STATUS_LEVEL_INFO);
         sendJsonResponse(oStatus,request);
 	});
     
     oWebServer.on("/apiV1/sysstatus", HTTP_GET, [](AsyncWebServerRequest *request) {
-        JSON_DOC(oStatus,2048);
+        CJsonNode oStatus ;
         Appl.writeSystemStatusTo(oStatus);
         sendJsonResponse(oStatus,request);
 	});
-    DEBUG_FUNC_END();
 }
