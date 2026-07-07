@@ -117,7 +117,11 @@ void registerModules() {
     DEBUG_FUNC_END();
 }
 
-/// @brief Dispatch the received 433 MHz messages.
+/// @brief Poll and dispatch received 433 MHz messages.
+///
+/// If the web UI is currently scanning for a remote code, the received value is
+/// sent back to the requesting websocket client. Otherwise known codes are
+/// translated into on-air events.
 void dispatchRadio433() {
   // Only, if the receiver notifies, that a message is available
   if(oRF433Receiver.available()) {
@@ -144,7 +148,10 @@ void dispatchRadio433() {
 }
 
 /**
- * Actions requested by user / GUI ?
+ * @brief Handle deferred actions requested by hardware input or the GUI.
+ *
+ * Long button presses request a reboot. Short presses cycle through a small set
+ * of demo/manual media states. WiFi restarts are delegated to the WiFi module.
  */
 void dispatchActions() {
   static unsigned long _buttonPressedTime = 0;
@@ -157,7 +164,7 @@ void dispatchActions() {
     // Longer than 5 millis pressed ? => reboot...
     else if((millis() - _buttonPressedTime) > 5 * 1000) AppStatus.isRebootPending = true;
   } else {
-    if(_buttonPressedTime + 500 > millis()) {
+    if(_buttonPressedTime != 0 && (millis() - _buttonPressedTime) < 500) {
       const char *pszID = "Light - Button";
       switch(_buttonPressedCount++) {
         case 0: 
@@ -179,7 +186,7 @@ void dispatchActions() {
 }
 
 /**
- * Set the status LED to the desired state
+ * @brief Reflect reboot, button and WiFi state on the RGB status LED.
  */
 void updateStatusLED() {
   // Reboot and Button Pressed == Prio 1
@@ -286,5 +293,4 @@ void loop() {
     oOnAirLight.updateLightStatus();
 
 }
-
 

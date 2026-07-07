@@ -20,6 +20,12 @@
 #define ONAIR_LIGHT_BRIGHTNESS_DEFAULT 30
 // #define MSG_SELECT_NEXT_LIGHT_STATE (MSG_USER_BASE + 300)
 
+/**
+ * @brief User configurable behavior for the on-air light.
+ *
+ * Camera and microphone activity can map to different light modes. If both are
+ * active at the same time, Priority decides which mode wins.
+ */
 struct OnAirLightConfig {
     int Priority   = ONAIR_CAMERA;
     int OnMicMode  = ONAIR_LIGHT_MODE_BLINK;
@@ -28,6 +34,12 @@ struct OnAirLightConfig {
     // Brightness is inside the CLightSwitch
 };
 
+/**
+ * @brief Last known media state for one reporting client.
+ *
+ * Each client can independently report microphone and camera state. The
+ * timestamp allows stale clients to be ignored after the configured timeout.
+ */
 struct OnAirLightStatus {
     bool isMicOn = false;
     bool isCamOn = false;
@@ -45,6 +57,13 @@ struct OnAirLightClient {
 };
 */
 
+/**
+ * @brief Controls the physical on-air light from web, MQTT, button and RF events.
+ *
+ * The class aggregates per-client camera/microphone state, exposes the state for
+ * status and Home Assistant discovery, and translates the effective state into
+ * the configured light mode.
+ */
 class COnAirLight : public CLightSwitch, public IModule, public IHomeAssistantComponent{
     private:
         unsigned long _ulWaveFadeIn  = 2000;

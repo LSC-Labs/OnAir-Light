@@ -9,17 +9,21 @@
 #include <OnAirLight.h>
 
 
+/// @brief Return true if the RF code is configured for dispatch.
 bool CRF433Receiver::hasKey(unsigned long ulKey) {
     return(!(this->tMessagesToSend.find(ulKey) == this->tMessagesToSend.end()));
 }
+/// @brief Return whether RF reception is enabled in configuration.
 bool CRF433Receiver::isEnabled() {
     return(this->Config.isEnabled);
 }
 
+/// @brief Look up the message bus event associated with a known RF code.
 RF433Message CRF433Receiver::getMessage(unsigned long ulKey) {
     return(this->tMessagesToSend[ulKey]);
 }
 
+/// @brief Initialize the receiver pin and install default codes when no config was loaded.
 void CRF433Receiver::setup(int nPin) {
     DEBUG_FUNC_START();
     if(nPin > -1) m_nPin = nPin;
@@ -98,18 +102,21 @@ void CRF433Receiver::writeStatusTo(CJsonNode &oCfg, int nLevel) {
 /// @return 0 - no or no new value / otherwise the received value...
 unsigned long CRF433Receiver::getReceivedValueOnce(unsigned long ulTimeout) {
     unsigned long ulData = RCSwitch::getReceivedValue();
+    unsigned long ulNow = millis();
     // Data available ?
     if(ulData != 0) {
         // same value as last time ?
         if(ulData == m_ulLastDataReceived) {
-            // in Timeout range ... no value...
-            if(m_ulLastDataReceivedTime + ulTimeout < millis()) {
+            // in timeout range ... no new value
+            if((ulNow - m_ulLastDataReceivedTime) < ulTimeout) {
                 ulData = 0;
+            } else {
+                m_ulLastDataReceivedTime = ulNow;
             }
         } else {
             // Reset received timestamp...
             this->m_ulLastDataReceived = ulData;
-            this->m_ulLastDataReceivedTime = millis();
+            this->m_ulLastDataReceivedTime = ulNow;
         }
         resetAvailable();
     }

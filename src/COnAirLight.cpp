@@ -46,6 +46,7 @@ void OnAirLightStatus::setState(const char *pszDevice, const char *pszMode) {
         }
     }
 }
+/// @brief Return true once this client's last update is older than the configured timeout.
 bool OnAirLightStatus::isTimeOutReached(unsigned long ulTimeOutMillis) {
     bool bResult = false;
    
@@ -58,10 +59,12 @@ bool OnAirLightStatus::isTimeOutReached(unsigned long ulTimeOutMillis) {
 
 #pragma region Constructor - Config and Status Interface
 
+/// @brief Create an on-air light on the given GPIO pin and apply default brightness.
 COnAirLight::COnAirLight(int nPin) : CLightSwitch(nPin) {
     this->setBrightness(ONAIR_LIGHT_BRIGHTNESS_DEFAULT);
 }
 
+/// @brief Load light modes, priority and brightness from the application config.
 void COnAirLight::readConfigFrom(CJsonNode &oCfg) {
     DEBUG_FUNC_START();
     DEBUG_JSON_OBJ(oCfg);
@@ -88,6 +91,7 @@ void COnAirLight::readConfigFrom(CJsonNode &oCfg) {
     DEBUG_FUNC_END();
 }
 
+/// @brief Persist the current on-air light configuration into a JSON node.
 void COnAirLight::writeConfigTo(CJsonNode &oCfg, bool bHideCritical) {
     DEBUG_FUNC_START();
     setNameOfMode(oCfg,"oncam",Config.OnCamMode);
@@ -98,6 +102,7 @@ void COnAirLight::writeConfigTo(CJsonNode &oCfg, bool bHideCritical) {
     DEBUG_FUNC_END();
 }
 
+/// @brief Write effective light state and per-client state to the status JSON.
 void COnAirLight::writeStatusTo(CJsonNode &oCfg,int nLevel) {
     oCfg["isMicOn"] = isMicOn();
     oCfg["isCamOn"] = isCamOn();
@@ -117,6 +122,7 @@ void COnAirLight::writeStatusTo(CJsonNode &oCfg,int nLevel) {
 
 #pragma endregion
 
+/// @brief Convert a config mode name into the internal light mode constant.
 int COnAirLight::getModeByName(String strMode, int nDefault) {
     int nResult = nDefault;
     if(strMode) {
@@ -128,6 +134,7 @@ int COnAirLight::getModeByName(String strMode, int nDefault) {
     return(nResult);
 }
 
+/// @brief Store a readable mode name for an internal light mode constant.
 String COnAirLight::setNameOfMode(CJsonNode &oCfg, const char *strKey, int nMode) {
     String strMode;
     switch(nMode) {
@@ -171,6 +178,7 @@ bool COnAirLight::isMicOn() {
 }
 
 
+/// @brief Recompute the effective media state and drive the physical light mode.
 void COnAirLight::updateLightStatus() {
     // DEBUG_FUNC_START();
     int nMode = ONAIR_LIGHT_MODE_OFF;
@@ -199,6 +207,7 @@ void COnAirLight::updateLightStatus() {
 }
  
 
+/// @brief Parse an MQTT JSON command and update the addressed client's media state.
 void COnAirLight::dispatchBrokerMessage(const char *pszMessage, int nLen) {
     DEBUG_FUNC_START_PARMS("\"%s\"",pszMessage);
     if(pszMessage && nLen > 10) {
@@ -228,6 +237,7 @@ void COnAirLight::dispatchBrokerMessage(const char *pszMessage, int nLen) {
     }
 }
 
+/// @brief Update or create the media state entry for one client.
 inline void COnAirLight::setClientStatus(String strClientAddress, const char *pszName, const char *pszValue) {
     DEBUG_FUNC_START_PARMS("'%s',%s,%s",strClientAddress.c_str(),NULL_POINTER_STRING(pszName),NULL_POINTER_STRING(pszValue));
     OnAirLightStatus *pStatus = &tClientStaties[strClientAddress]; //  getClientStatus(strClientAddress);

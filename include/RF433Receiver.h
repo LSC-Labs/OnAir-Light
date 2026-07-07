@@ -7,23 +7,36 @@
 #include <StatusHandler.h>
 #include <map>
 
+/**
+ * @brief Configuration for the 433 MHz receiver module.
+ */
 struct RF433Config {
     bool   isEnabled = true;
     String OnMessage = "";
     String OffMessae = "";
 };
 
+/**
+ * @brief Message bus event emitted when a configured RF code is received.
+ */
 struct RF433Message {
     int MsgId;     // Message ID to send,
     int MsgType;   // Message Type to send
 };
 
+/**
+ * @brief RCSwitch based 433 MHz receiver with configurable code-to-event mapping.
+ *
+ * The receiver stores known RF codes and forwards matching codes to the
+ * application message bus. It also filters short duplicate repeats that are
+ * common with inexpensive RF remotes.
+ */
 class CRF433Receiver : public RCSwitch, public IConfigHandler, public IStatusHandler {
     private:
         bool         m_bConfigIsLoaded = false; // If Config is not loaded, setup will insert default Remotes
         const char * pszDeviceName;
         int m_nPin = -1;
-        unsigned long m_ulLastDataReceived;
+        unsigned long m_ulLastDataReceived = 0L;
         unsigned long m_ulLastDataReceivedTime = 0L;
         RF433Config Config;
         std::map<unsigned long, RF433Message> tMessagesToSend;
