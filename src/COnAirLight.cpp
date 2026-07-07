@@ -14,27 +14,35 @@
 /// @param pszMode "on", "true", "+", "1" => switches on. All other switches off.
 void OnAirLightStatus::setState(const char *pszDevice, const char *pszMode) {
     DEBUG_FUNC_START_PARMS("%s,%s",NULL_POINTER_STRING(pszDevice),NULL_POINTER_STRING(pszMode));
+    bool bHasChanged = false;
     if(pszDevice && pszMode) {
         String strName = pszDevice;
         String strValue = pszMode;
         int nDevState = ONAIR_DEVICE_OFF;
         if(strValue.equals("on") || LSC::isTrueValue(pszMode)) nDevState = ONAIR_DEVICE_ON;
         if(strName.equalsIgnoreCase("audio") || strName.equalsIgnoreCase("mic") )       { 
+            if(isMicOn != nDevState) bHasChanged = true;
             isMicOn = nDevState;
             ulLastUpdate = millis(); 
             DEBUG_INFOS(" - setting isMicOn to : %d TS(%lu)",isCamOn,ulLastUpdate);
         }     
         else if(strName.equalsIgnoreCase("video") || strName.equalsIgnoreCase("cam"))  { 
+            if(isCamOn != nDevState) bHasChanged = true;
             isCamOn = nDevState; 
             ulLastUpdate = millis();
             DEBUG_INFOS(" - setting isCamOn to : %d TS(%lu)",isCamOn,ulLastUpdate);
         } else if(strName.equalsIgnoreCase("media")) {
+            if(isCamOn != nDevState) bHasChanged = true;
+            if(isMicOn != nDevState) bHasChanged = true;
             isCamOn = nDevState;
             isMicOn = nDevState;
             ulLastUpdate = millis();
             DEBUG_INFOS(" - setting all media to : %d TS(%lu)",isCamOn,ulLastUpdate);
         } else {
             DEBUG_INFOS(" - unknown device : %s",pszDevice);
+        }
+        if(bHasChanged) {
+            Appl.MsgBus.sendEvent(this,MSG_MQTT_SEND_JSONSTATE,Appl.getState(),0);
         }
     }
 }
@@ -65,7 +73,7 @@ void COnAirLight::readConfigFrom(CJsonNode &oCfg) {
         if(strPrio == "cam") Config.Priority = ONAIR_CAMERA;
     }
     unsigned long ulBrightness = 0;
-    oCfg.setValue("brightness,&ulBrightness");
+    ulBrightness = oCfg.getValueAsUnsignedLong("brightness",ulBrightness);
     // If not available, use default.
     if(ulBrightness < 10 || ulBrightness > 100) ulBrightness = ONAIR_LIGHT_BRIGHTNESS_DEFAULT;
     this->setBrightness(ulBrightness);
@@ -93,12 +101,13 @@ void COnAirLight::writeConfigTo(CJsonNode &oCfg, bool bHideCritical) {
 void COnAirLight::writeStatusTo(CJsonNode &oCfg,int nLevel) {
     oCfg["isMicOn"] = isMicOn();
     oCfg["isCamOn"] = isCamOn();
+    oCfg["isLightOn"] = isOn();
     oCfg["timeout"] = Config.TimeOutMillis / 1000;
     // JsonArray oArray = CreateJsonArray(oCfg,"clients");
-    JsonNode * pArray = oCfg.getArray("clients");
+    JsonNode * pArray = oCfg.getArray("clients",true);
     for(auto oClient : tClientStaties) {
         // JsonObject oData = CreateEmptyJsonObject(oArray);//  oArray.createNestedObject();
-        JsonNode *pData = pArray->createEmptyObject(); 
+        JsonNode *pData = pArray->createObject(); 
         (*pData)["client"] = oClient.first.c_str();
         (*pData)["isCamOn"] = oClient.second.isCamOn;
         (*pData)["isMicOn"] = oClient.second.isMicOn;
@@ -186,10 +195,9 @@ void COnAirLight::updateLightStatus() {
         default: switchOff();
     }
     // DEBUG_INFOS(" - isMicOn(%d) isCamOn(%d) -> Mode %d (CamMode %d) (MicMode %d)",bIsMicOn, bIsCamOn, nMode,Config.OnCamMode,Config.OnMicMode);
-    // DEBUG_DELAY(1000);
+    // DEBUG_DELAY(100);
 }
  
-
 
 void COnAirLight::dispatchBrokerMessage(const char *pszMessage, int nLen) {
     DEBUG_FUNC_START_PARMS("\"%s\"",pszMessage);
@@ -224,22 +232,11 @@ inline void COnAirLight::setClientStatus(String strClientAddress, const char *ps
     DEBUG_FUNC_START_PARMS("'%s',%s,%s",strClientAddress.c_str(),NULL_POINTER_STRING(pszName),NULL_POINTER_STRING(pszValue));
     OnAirLightStatus *pStatus = &tClientStaties[strClientAddress]; //  getClientStatus(strClientAddress);
     pStatus->setState(pszName,pszValue);
-    /*
-    String strData1 = "H";
-    oStatus = getClientStatus(strData1);
-    oStatus.isCamOn = true;
-    DEBUG_INFOS("S1 : %lu %d",&oStatus,oStatus.isCamOn );
-
-    String strData2 = "H";
-    oStatus = getClientStatus(strData2);
-    DEBUG_INFOS("S2 : %lu %d",&oStatus,oStatus.isCamOn );
-
-    String strData3 = "H";
-    DEBUG_INFOS("S3 : %lu %d",&tClientStaties[strData3],tClientStaties[strData3].isCamOn );
-    */
+   
     
-
+    DEBUG_FUNC_END();
 }
+
 
 /// @brief Set the mode to on / off 
 /// @param pSender sender of the message
@@ -250,9 +247,14 @@ inline void COnAirLight::setClientStatus(String strClientAddress, const char *ps
 int COnAirLight::receiveEvent(const void * pSender, int nMsgId, const void * pMessage, int nType) {
     DEBUG_FUNC_START_PARMS("%d,%d",nMsgId,nType);
     switch(nMsgId) {
-        case MSG_MQTT_MSG_RECEIVED : // Message Broker Message in pMessage, size in nType
-            dispatchBrokerMessage((const char*) pMessage, nType);
+
+        case MSG_MQTT_MSG_RECEIVED : { // Message Broker Message in pMessage
+            MQTTMessage *pMsg = (MQTTMessage *) pMessage;
+            if(pMsg && pMsg->isDeviceCommandTopic() && pMsg->Message) {
+                dispatchBrokerMessage(pMsg->Message, strlen(pMsg->Message));
+            }
             break;
+        }
         case MSG_ONAIR_BASE + ONAIR_CAMERA : 
             setClientStatus((const char *) pMessage,"video",nType == ONAIR_DEVICE_ON ? "on" : "off");
             break;
@@ -264,4 +266,93 @@ int COnAirLight::receiveEvent(const void * pSender, int nMsgId, const void * pMe
     return(EVENT_MSG_RESULT_OK);
 }
 
+/**
+ * @brief insert the Home Assistant component informations.
+ * Do not use msg queue to avoid duplicate insertion
+ * see messages for Home Assistance
+ * --> https://github.com/home-assistant/core/blob/dev/homeassistant/components/mqtt/abbreviations.py
+ * --> https://www.home-assistant.io/integrations/mqtt/#supported-abbreviations-in-mqtt-discovery-messages
+ * --> Icons : https://pictogrammers.com/library/mdi/
+ */
+void COnAirLight::insertComponentDiscovery(const char *pszCompName,JsonNode & oComponentArea, CMQTTController * pController) {
 
+    String strCommandTopic = pController ? pController->getDeviceCommandBaseTopicPath() : "";
+    String strStateTopic = pController ? pController->Config.PublishTopicPrefix + "/state" : "";
+    String strCompID;
+    strCompID = Appl.getDeviceID();
+    strCompID += "-cam";
+    JsonNode * pCameraSensor = oComponentArea.getObject("cam",true);
+    pCameraSensor->setValue("p",                   "binary_sensor");
+    pCameraSensor->setValue("icon",                "mdi:cctv");
+    pCameraSensor->setValue("value_template" ,     "{{ 'ON' if value_json.onair.isCamOn else 'OFF' }}");
+    pCameraSensor->setValue("payload_on",          "ON");
+    pCameraSensor->setValue("payload_off",         "OFF");
+    pCameraSensor->setValue("unique_id",           strCompID.c_str());
+    pCameraSensor->setValue("name",                "Camera status");
+
+    strCompID = Appl.getDeviceID();
+    strCompID += "-mic";
+    JsonNode * pMicrophoneSensor = oComponentArea.getObject("mic",true);
+    pMicrophoneSensor->setValue("p",                  "binary_sensor");
+    pMicrophoneSensor->setValue("icon",               "mdi:microphone");
+    pMicrophoneSensor->setValue("value_template",     "{{ 'ON' if value_json.onair.isMicOn else 'OFF' }}");
+    pMicrophoneSensor->setValue("payload_on",         "ON");
+    pMicrophoneSensor->setValue("payload_off",        "OFF");
+    pMicrophoneSensor->setValue("unique_id",          strCompID.c_str());
+    pMicrophoneSensor->setValue("name",               "Microphone status");
+
+    strCompID = Appl.getDeviceID();
+    strCompID += "-light-switch";
+    JsonNode * pLightSwitch = oComponentArea.getObject("light",true);
+    pLightSwitch->setValue("p",                       "switch");
+    pLightSwitch->setValue("icon",                    "mdi:alarm-light");
+    pLightSwitch->setValue("value_template",          "{{ 'ON' if value_json.onair.isCamOn or value_json.onair.isMicOn else 'OFF' }}");
+    pLightSwitch->setValue("state_on",                "ON");
+    pLightSwitch->setValue("state_off",               "OFF");
+    pLightSwitch->setValue("command_topic",           (strCommandTopic + "/onair/light").c_str());
+    pLightSwitch->setValue("payload_on",              "{\"client\":\"HomeAssistant\",\"media\":\"on\"}");
+    pLightSwitch->setValue("payload_off",             "{\"client\":\"HomeAssistant\",\"media\":\"off\"}");
+    pLightSwitch->setValue("unique_id",               strCompID.c_str());
+    pLightSwitch->setValue("name",                    "On Air light");
+
+    strCompID = Appl.getDeviceID();
+    strCompID += "-cam-switch";
+    JsonNode * pCameraSwitch = oComponentArea.getObject("cam_switch",true);
+    pCameraSwitch->setValue("p",                      "switch");
+    pCameraSwitch->setValue("icon",                   "mdi:cctv");
+    pCameraSwitch->setValue("value_template",         "{{ 'ON' if value_json.onair.isCamOn else 'OFF' }}");
+    pCameraSwitch->setValue("state_on",               "ON");
+    pCameraSwitch->setValue("state_off",              "OFF");
+    pCameraSwitch->setValue("command_topic",          (strCommandTopic + "/onair/cam").c_str());
+    pCameraSwitch->setValue("payload_on",             "{\"client\":\"HomeAssistant\",\"cam\":\"on\"}");
+    pCameraSwitch->setValue("payload_off",            "{\"client\":\"HomeAssistant\",\"cam\":\"off\"}");
+    pCameraSwitch->setValue("unique_id",              strCompID.c_str());
+    pCameraSwitch->setValue("name",                   "Camera switch");
+
+    strCompID = Appl.getDeviceID();
+    strCompID += "-mic-switch";
+    JsonNode * pMicrophoneSwitch = oComponentArea.getObject("mic_switch",true);
+    pMicrophoneSwitch->setValue("p",                  "switch");
+    pMicrophoneSwitch->setValue("icon",               "mdi:microphone");
+    pMicrophoneSwitch->setValue("value_template",     "{{ 'ON' if value_json.onair.isMicOn else 'OFF' }}");
+    pMicrophoneSwitch->setValue("state_on",           "ON");
+    pMicrophoneSwitch->setValue("state_off",          "OFF");
+    pMicrophoneSwitch->setValue("command_topic",      (strCommandTopic + "/onair/mic").c_str());
+    pMicrophoneSwitch->setValue("payload_on",         "{\"client\":\"HomeAssistant\",\"mic\":\"on\"}");
+    pMicrophoneSwitch->setValue("payload_off",        "{\"client\":\"HomeAssistant\",\"mic\":\"off\"}");
+    pMicrophoneSwitch->setValue("unique_id",          strCompID.c_str());
+    pMicrophoneSwitch->setValue("name",               "Microphone switch");
+
+    strCompID = Appl.getDeviceID();
+    strCompID += "-clients";
+    JsonNode * pClientSensor = oComponentArea.getObject("clients",true);
+    pClientSensor->setValue("p",                      "sensor");
+    pClientSensor->setValue("icon",                   "mdi:account-multiple");
+    pClientSensor->setValue("unit_of_measurement",    "clients");
+    pClientSensor->setValue("value_template",         "{{ value_json.onair.clients | count if value_json.onair.clients is defined else 0 }}");
+    pClientSensor->setValue("json_attributes_topic",  strStateTopic.c_str());
+    pClientSensor->setValue("json_attributes_template","{{ {'clients': value_json.onair.clients | default([])} | tojson }}");
+    pClientSensor->setValue("unique_id",              strCompID.c_str());
+    pClientSensor->setValue("name",                   "Clients");
+
+}

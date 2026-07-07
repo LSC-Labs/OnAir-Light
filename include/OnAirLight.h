@@ -1,8 +1,7 @@
 #pragma once
 #include <LightSwitch.h>
-#include <ConfigHandler.h>
-#include <StatusHandler.h>
-#include <EventHandler.h>
+#include <ModuleInterface.h>
+#include <MQTTController.h>
 #include <AppMsgs.h>
 #include <map>
 
@@ -46,7 +45,7 @@ struct OnAirLightClient {
 };
 */
 
-class COnAirLight : public CLightSwitch, public IConfigHandler, public IStatusHandler, public IMsgEventReceiver{
+class COnAirLight : public CLightSwitch, public IModule, public IHomeAssistantComponent{
     private:
         unsigned long _ulWaveFadeIn  = 2000;
         unsigned long _ulWaveFadeOut = 2000;
@@ -64,6 +63,8 @@ class COnAirLight : public CLightSwitch, public IConfigHandler, public IStatusHa
         void readConfigFrom(CJsonNode &oCfg) override;
         void writeConfigTo(CJsonNode &oCfg, bool bHideCritical) override;
         void writeStatusTo(CJsonNode &oStatus,int nLevel = STATUS_LEVEL_INFO) override;
+        void insertComponentDiscovery(const char *pszCompName,JsonNode & oComponentArea, CMQTTController * pController);
+        void insertHADiscoveryCompontents(JsonNode & oComponents);
         void updateLightStatus();
         void dispatchBrokerMessage(const char *pszMessage, int nLen);  
         bool isCamOn();
