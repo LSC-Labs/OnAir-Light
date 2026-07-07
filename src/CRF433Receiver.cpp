@@ -39,10 +39,10 @@ void CRF433Receiver::writeConfigTo(CJsonNode &oCfg, bool bHideCritical){
     DEBUG_FUNC_START();
     oCfg["enabled"] = Config.isEnabled;
     // JsonArray tMessageList = CreateJsonArray(oCfg,"msgs");//  oCfg.createNestedArray("msgs");
-    JsonNode * ptMessageList = oCfg.getArray("msgs");
+    JsonNode * ptMessageList = oCfg.getArray("msgs",true);
     for(auto oEntry : this->tMessagesToSend) {
         // JsonObject oData = CreateEmptyJsonObject(tMessageList); //  tMessageList.createNestedObject();
-        JsonNode *pData = ptMessageList->createEmptyObject();
+        JsonNode *pData = ptMessageList->createObject();
         int nMsg = oEntry.second.MsgId - MSG_ONAIR_BASE;
         if(nMsg < 0 || nMsg > ONAIR_DEVICE_UPPER_LIMIT) nMsg = ONAIR_CAMERA;
 

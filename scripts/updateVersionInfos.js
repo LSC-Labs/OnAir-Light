@@ -5,7 +5,7 @@
  * 
  * @file scripts/syncFiles.js
  * @author LSC Labs - Peter Liebl
- * @version 1.0.7
+ * @version 1.0.10.2
  */
 
 // const process = require('process');
@@ -15,13 +15,18 @@ import path from 'path';
 import { CConfig, getProjectName,Utils } from './_common.js';
 
 const MODULE_NAME = "updateVersionInfos";
-const MODULE_VERSION = "1.0.7";
+const MODULE_VERSION = "1.0.10";
 
+const args = process.argv;
 
 var oLocations = {
-    "appsetting": path.join("src","web","js","settings.js"),
-    "versionfile": path.join("data","version.json"),
-    "packagefile": "package.json",
+    "appsetting":           path.join("src","web","js","settings.js"),
+    "versionfile":          path.join("data","version.json"),
+    "versionincludefile":   path.join("include","ProgVersion.h"),
+    "packagefile":          "package.json",
+    "basebuildfolder":      path.join(".pio","build"),
+    "buildfilefolder":      "src",
+    "mainbuildfile":        "main.cpp.o",
     "test": {
         statusFiles: 
         [
@@ -52,6 +57,26 @@ var oVersionData = {
 	"build": 0
 }
 
+function getDirectories(path) {
+  return fs.readdirSync(path).filter(function (file) {
+    return fs.statSync(path+'/'+file).isDirectory();
+  });
+}
+
+function forceCompileMain() {
+    for(let strName of getDirectories(oLocations.basebuildfolder)) {
+        
+        console.log("forcing on build : " + strName);
+        let strFileName = path.join(oLocations.basebuildfolder,strName,oLocations.buildfilefolder,oLocations.mainbuildfile);
+        if(fs.existsSync(strFileName)) {
+            fs.rmSync(strFileName);
+            console.log( "  --> unlinking " + strFileName);
+        }
+
+    }
+}
+
+
 function loadVersionFile() {
     let bResult = false;
     let strFile = oLocations.versionfile;
@@ -80,6 +105,33 @@ function loadProjectPackageFile() {
     return(bResult);
 }
 
+function updateProjectPackageFile() {
+    // load was already in place... oPackageData contains the needed infos.
+    let bModified = false;
+    let tVersion = oPackageData.version.split('.');
+    let nMajor = tVersion[0] ?? 0;
+    let nMinor = tVersion[1] ?? 0;
+    let nPatch = tVersion[2] ?? 1;
+
+    for(let strArg of args) {
+        switch(strArg) {
+            case "-major": bModified = true; nMajor++; nMinor = 0; nPatch = 0; break;
+            case "-minor": bModified = true; nMinor++; nPatch = 0; break;
+            case "-patch": bModified = true; nPatch++; break;
+        }
+    }
+
+    if(bModified) {
+        oVersionData.build = -1;
+        console.log("Updating package version info...");
+        oPackageData.version = nMajor + "." + nMinor + "." + nPatch;
+        // Write to filesystem - pretty print 
+        let strJson = JSON.stringify(oPackageData,null,4);
+        fs.writeFileSync(oLocations.packagefile, strJson);
+    }
+    return(bModified);
+}
+
 function getLongVersionString() {
     return(oVersionData.major + "." + oVersionData.minor + "." + oVersionData.patch + "." + oVersionData.build);
 }
@@ -89,19 +141,25 @@ function showCurrentVersion() {
     console.log(" - Version   : " + getLongVersionString());
 }
 
-function updateVersionFile() {
+
+
+function updateVersionFile(bResetBuild) {
     console.log("---> update version file...")
     // set name only, if not already in place...
     if(!oVersionData.name) {
        oVersionData.name = path.basename(process.cwd());
     }
+    oVersionData.author = oPackageData.author;
+    oVersionData.homepage = oPackageData.homepage;
+    
     // User major/minor/patch from package file
-    // and increment the build number...
+    // and increment the requested (build) number...
     let tVersion = oPackageData.version.split('.');
     oVersionData.major = tVersion[0];
     oVersionData.minor = tVersion[1];
     oVersionData.patch = tVersion[2];
     oVersionData.build++;
+    if(bResetBuild) oVersionData.build = 0;
 
     // Write to filesystem - pretty print 
     let strJson = JSON.stringify(oVersionData,null,4);
@@ -134,6 +192,47 @@ function updateSettingFile() {
     }
 }
 
+
+var ProgVersionIncludeSkel = [
+        '#pragma once',
+        '\n' + '// (c) LSC Labs',
+        '\n' + '// This file will be build by the runtime, so do not change here.',
+        '\n' + '// If you want to change the major/minor/patch version nummer, use the file data/prog_ver.json.',
+        '\n' + '// Use the npm incr* scripts to update this file.',
+        '\n' + '// The build nummer will be incremented by platform.io -> prebuild steps (release mode)',
+        '\n'
+]
+    
+
+
+/**
+ * ProgVersion.h in include file folder - set new values...
+ */
+function updateVersionIncludeFile() {
+    console.log("---> update version include file...")
+    let strFile = oLocations.versionincludefile;
+    if(fs.existsSync(strFile)) {
+        let strData = fs.readFileSync(strFile);
+        var oWS = fs.createWriteStream(strFile);
+        oWS.on('error', function(err) { console.log("Error on writing to " + strFile); console.log(err); });
+        for(let strLine of ProgVersionIncludeSkel) oWS.write(strLine);
+        oWS.write("\n#define PROG_VERSION_NAME  \"" + oVersionData.name        + "\"");
+	    oWS.write("\n#define PROG_AUTHOR        " + oVersionData.author     );
+		oWS.write("\n#define PROG_HOMEPAGE      " + oVersionData["homepage"]);
+		oWS.write("\n#define PROG_VERSION_MAJOR " + oVersionData["major"]   );
+		oWS.write("\n#define PROG_VERSION_MINOR " + oVersionData["minor"]   );
+		oWS.write("\n#define PROG_VERSION_PATCH " + oVersionData["patch"]   );
+		oWS.write("\n#define PROG_VERSION_BUILD " + oVersionData["build"]   );
+		oWS.write("\n#define PROG_VERSION       \"" + oVersionData["major"] + "." + oVersionData["minor"] + "." + oVersionData["patch"] + "\"");
+		oWS.write("\n#define PROG_VERSION_SHORT \"" + oVersionData["major"] + "." + oVersionData["minor"] + "\"");
+		oWS.write("\n#define PROG_VERSION_LONG  \"" + getLongVersionString() + "\"");
+        oWS.end();
+    } else {
+        console.log("[E] - app setting file '" + strFile + "' not found...");
+    }
+}
+
+
 function updateTestStatusFile(strFile) {
     if(!strFile) strFile = oLocations.test.statusFiles[0]; 
     console.log("---> update test status file : " + strFile);
@@ -152,7 +251,6 @@ function updateTestStatusFile(strFile) {
         console.log("[E] - app setting file '" + strFile + "' not found...");
     }
 }
-
 
 
 /**
@@ -177,11 +275,15 @@ console.log("********************************************");
 console.log("---- " + MODULE_NAME + " Version " + MODULE_VERSION);
 console.log("********************************************");
 if(loadProjectPackageFile() && loadVersionFile()) {
+    let bPackageUpdate = updateProjectPackageFile();
     updateVersionFile();   
     updateSettingFile();
+    updateVersionIncludeFile();
     oLocations.test.statusFiles.forEach(strFile => updateTestStatusFile(strFile));
 }
-console.log("==> " + MODULE_NAME + " to Version");
+console.log("==> udpated to Version:");
 console.log("--------------------------------------------");
 showCurrentVersion();
 console.log("--------------------------------------------");
+
+forceCompileMain();

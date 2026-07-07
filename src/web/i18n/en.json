@@ -1,5 +1,4 @@
 {
-  "_language": "English",
   "menu": {
     "title": "$(prog_name)",
     "signin": "Sign in",
@@ -38,16 +37,16 @@
     }
   },
   "Info": {
+    "panel": {
+      "clients": "Current clients",
+      "device": "Device"
+    },
     "legend": "Overview",
     "clients": "Clients",
     "noClients": "No clients connected...",
     "none": "-",
     "cam": "Camera",
     "micro": "Microphone",
-    "panel": {
-      "clients": "Current clients",
-      "device": "Device"
-    },
     "groupname": "Device",
     "battery": "Battery",
     "intern": "Indoor",
@@ -57,13 +56,21 @@
     "hum": "Humidity"
   },
   "Status": {
-    "legend": "Status of $(prog_name) Ver.: $(prog_ver)",
     "panel": {
       "device": "Device",
       "network": "Network",
       "mqtt": "Message broker",
       "dewpoint": "Dew Point switch"
     },
+    "fan": {
+      "active": "Fan active"
+    },
+    "sensor": {
+      "OD": "Sensor (Outdoor)",
+      "ID": "Sensor (Indoor)",
+      "dewpoint": "DP"
+    },
+    "legend": "Status of $(prog_name) Ver.: $(prog_ver)",
     "hostname": "Systemname",
     "uptime": "Uptime",
     "flashSize": "Flash size",
@@ -84,19 +91,9 @@
     "disconReason": "Disconnect reason",
     "memOK": "$(sketch_size) Kb used of $(flash_available) Kb => $(flash_used_percent)%",
     "memWarn": "Too less memory to update via OTA ! $(flash_used_percent)% used.",
-    "dewpoints": "Dew Points In / Out",
-    "fan": {
-      "active": "Fan active"
-    },
-    "sensor": {
-      "OD": "Sensor (Outdoor)",
-      "ID": "Sensor (Indoor)",
-      "dewpoint": "DP"
-    }
+    "dewpoints": "Dew Points In / Out"
   },
   "System": {
-    "title": "Restart or Reset",
-    "desc": "Restart or Reset the device",
     "Restart": {
       "btn": "Restart Device",
       "title": "Restart Device",
@@ -110,10 +107,11 @@
       "desc": "All settings will be dropped, the device will reboot with factory settings.",
       "confirm": "Are you sure you want to reset the device to factory defaults? The device will restart in delivery state.",
       "waitmsg": "Please wait while the device is resetting to factory defaults..."
-    }
+    },
+    "title": "Restart or Reset",
+    "desc": "Restart or Reset the device"
   },
   "WiFi": {
-    "legend": "Wi-Fi Settings",
     "scan": {
       "title": "Scanning WiFi - please wait...",
       "titleDone": "Select a WiFi to use...",
@@ -170,10 +168,10 @@
     "STA": {
       "type": "Client",
       "desc": "Type your Wi-Fi Network's SSID or press 'Scan' for nearby Wireless Networks to join."
-    }
+    },
+    "legend": "Wi-Fi Settings"
   },
   "MQTT": {
-    "title": "Message Broker",
     "desc": {
       "enable": "Enable the message broker to use this service",
       "configure": "Configure the message broker or disable to stop the service"
@@ -209,11 +207,18 @@
     "syncrate": {
       "label": "Sync time (seconds)",
       "info": "Sync time to send a heartbeat message to the MQTT server"
-    }
+    },
+    "ha": {
+      "label": "Home Assistant Support",
+      "info": "Enable or disable MQTT support for Home Assistant"
+    },
+    "hatopic": {
+      "label": "Home Assistant Topic",
+      "info": "Topic prefix for Home Assistant integration (see your Home Assistant MQTT implementation)"
+    },
+    "title": "Message Broker"
   },
   "Device": {
-    "legend": "Welcome to your $(prog_name) Device",
-    "title": "Set the name of your device (hostname) and the password for the admin account",
     "hostname": {
       "text": "Host name",
       "title": "Enter the hostname here..."
@@ -221,11 +226,11 @@
     "password": {
       "text": "Password",
       "title": "Enter the password for the admin account"
-    }
+    },
+    "legend": "Welcome to your $(prog_name) Device",
+    "title": "Set the name of your device (hostname) and the password for the admin account"
   },
   "SysCfg": {
-    "legend": "Backup & Restore",
-    "title": "Backup or Restore the device configuration. Be aware, the backup file is <b>NOT</b> encrypted.<br/> Store it on a safe place to avoid loosing your access credentials...",
     "Backup": {
       "title": "Backup Settings",
       "desc": "Save the config to a backup file.",
@@ -236,7 +241,9 @@
       "desc": "Click and choose your file from your local device to be restored.",
       "btn": "Restore Settings",
       "invalidFile": "The file you selected is not a valid backup file..."
-    }
+    },
+    "legend": "Backup & Restore",
+    "title": "Backup or Restore the device configuration. Be aware, the backup file is <b>NOT</b> encrypted.<br/> Store it on a safe place to avoid loosing your access credentials..."
   },
   "Firmware": {
     "legend": "Firmware update (current firmware: $(prog_ver))",
@@ -262,13 +269,25 @@
     "githubBtn": "Open Issue"
   },
   "RF433": {
-    "legend": "RF433 Settings",
-    "desc": "Set the radio remotes for 433Mhz",
     "enable": {
       "text": "Enable RF433",
       "info": "Enable or disable the RF433 function",
       "button": "Enable"
     },
+    "edit": {
+      "text": "Edit",
+      "title": "Edit the remote"
+    },
+    "add": {
+      "text": "Add",
+      "title": "Add a new remote"
+    },
+    "cmd": {
+      "0": "Off",
+      "1": "On"
+    },
+    "legend": "RF433 Settings",
+    "desc": "Set the radio remotes for 433Mhz",
     "known": "Known codes",
     "code": "RF433 Code",
     "device": "Device",
@@ -278,25 +297,11 @@
     "mic": "Microphone",
     "on": "ON",
     "off": "OFF",
-    "edit": {
-      "text": "Edit",
-      "title": "Edit the remote"
-    },
-    "add": {
-      "text": "Add",
-      "title": "Add a new remote"
-    },
     "del": "Delete",
     "scan": "Scan",
-    "on_off": "On / Off",
-    "cmd": {
-      "0": "Off",
-      "1": "On"
-    }
+    "on_off": "On / Off"
   },
   "OnAir": {
-    "legend": "On Air Settings",
-    "desc": "Setup the behaviour of your OnAir Lamp.",
     "mic": {
       "text": "Microphone",
       "info": "Select the action, when an active microphone is detected"
@@ -318,21 +323,23 @@
       "on": "Permanent light",
       "blink": "Blink the light",
       "wave": "Wave the light"
-    }
+    },
+    "legend": "On Air Settings",
+    "desc": "Setup the behaviour of your OnAir Lamp."
   },
   "Clients": {
-    "legend": "Available clients",
-    "desc": "Download and install the client for your operating system.<br/>As most of the clients are signed, you can use and install the certificates first.",
     "Certs": {
-      "text": "Certificates",
-      "desc": "To limit the risk, the software is signed with certificates from LSC-Labs.<br/>Install the root and the intermediate certificates from first - be sure you are installing it from the correct page.",
-      "page": "Certificate downloads",
       "downBtn": "Download",
       "downRoot": "Root Cert",
       "downInter": "Intermediate Cert",
+      "text": "Certificates",
+      "desc": "To limit the risk, the software is signed with certificates from LSC-Labs.<br/>Install the root and the intermediate certificates from first - be sure you are installing it from the correct page.",
+      "page": "Certificate downloads",
       "root": "Root Cert",
       "inter": "Intermediate Cert"
     },
+    "legend": "Available clients",
+    "desc": "Download and install the client for your operating system.<br/>As most of the clients are signed, you can use and install the certificates first.",
     "html": [
       "The available client software can be found on the download page.<br/>The software is available for Windows, Linux and MacOS - (under construction).",
       "<br/><br/>For Windows, there are several different versions available: One click deploy (MS) and portable versions for .Net and Net Framework.",
@@ -344,5 +351,6 @@
     ],
     "page": "Clients",
     "downloadLink": "Clients download page"
-  }
+  },
+  "_language": "English"
 }

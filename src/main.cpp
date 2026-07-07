@@ -25,7 +25,7 @@ CFS oFS;
  *  Application Config and Status objects
  */ 
 CStatus         AppStatus;
-CAppConfig      AppConfig;
+// CAppConfig      AppConfig;
 
 /**
  * I/O objects
@@ -83,29 +83,38 @@ void runDebugTests() {
 /// @brief Register all Appl modules (Status/Config) and initialize the application
 /// and load the configuration file, if button is not pressed.
 void registerModules() {
-    // Register modules to listen at the Appl-Message bus
+    DEBUG_FUNC_START();
+    DEBUG_INFO(" - registering modules...");
+    Appl.registerModule("web",&oWebServer);
+    Appl.registerModule("wifi",&oWiFiController);
+    Appl.registerModule("mqtt",&oMQTTController);
+
+    DEBUG_INFO(" - on appl msg bus...");
     Appl.MsgBus.registerEventReceiver(&AppStatus);
     Appl.MsgBus.registerEventReceiver(&oOnAirLight);
-    Appl.MsgBus.registerEventReceiver(&oWiFiController);
-    Appl.MsgBus.registerEventReceiver(&oWebSocket);
     
+    DEBUG_INFO(" - on config interface");
     // Register modules with configuration
-    Appl.addConfigHandler("web",   &oWebServer);
-    Appl.addConfigHandler("wifi",  &oWiFiController);
+    // Appl.addConfigHandler("web",   &oWebServer);
+    // Appl.addConfigHandler("wifi",  &oWiFiController);
+    // Appl.addConfigHandler("mqtt",  &oMQTTController);
     Appl.addConfigHandler("onair", &oOnAirLight);
-    Appl.addConfigHandler("app",   &AppConfig);
-    Appl.addConfigHandler("mqtt",  &oMQTTController);
+    // Appl.addConfigHandler("app",   &AppConfig);
     
+    DEBUG_INFO(" - on status interface");
     // Register modules for status infos
-    Appl.addStatusHandler("wifi",  &oWiFiController);
+    // Appl.addStatusHandler("wifi",  &oWiFiController);
+    // Appl.addStatusHandler("mqtt",  &oMQTTController);
     Appl.addStatusHandler("app",   &AppStatus);
     Appl.addStatusHandler("onair", &oOnAirLight);
-    Appl.addStatusHandler("mqtt",  &oMQTTController);
     Appl.addStatusHandler("bat",   &oBatMeasure);
     
+    DEBUG_INFO(" - 433");
     Appl.addConfigHandler("rf433", &oRF433Receiver);
     Appl.addStatusHandler("rf433", &oRF433Receiver);
 
+    oMQTTController.registerHomeAssistantComponent("onair",&oOnAirLight);
+    DEBUG_FUNC_END();
 }
 
 /// @brief Dispatch the received 433 MHz messages.
@@ -206,7 +215,7 @@ void updateStatusLED() {
 ///   - WebServer and WebSockets
 void setup() {
     // Serial Port Setup and Application init...
-    Serial.begin(115200);
+    // Serial.begin(115200);
     DEBUG_INFOS("\nInitializing application: \"%s\" Version: %s\n",APP_NAME,APP_VERSION);
     // register the modules...
     registerModules();

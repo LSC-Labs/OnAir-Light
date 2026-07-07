@@ -39,7 +39,7 @@
                     "lib/PLibESPV1/scripts/_common.js               > scripts/_common.js",
                     "lib/PLibESPV1/scripts/_compilePages.js         > scripts/_compilePages.js",
                     "lib/PLibESPV1/scripts/syncFiles.js             > scripts/syncFiles.js",
-                    "lib/PLibESPV1/scripts/updateVersionsInfos.js   > scripts/updateVersionInfos.js",
+                    "lib/PLibESPV1/scripts/updateVersionInfos.js    > scripts/updateVersionInfos.js",
                     "lib/PLibESPV1/src/web/index.html               > src/web/index.html",
                     "lib/PLibESPV1/src/web/js/index.js              > src/web/js/index.js",
                     "lib/PLibESPV1/src/web/js/settings.js           = src/web/js/settings.js",

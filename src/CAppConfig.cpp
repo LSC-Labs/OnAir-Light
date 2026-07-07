@@ -4,7 +4,7 @@
 
 
 void CAppConfig::readConfigFrom(CJsonNode &oCfg) {
-    oCfg.setValue("autorestart",&AutoRestartTime);
+    AutoRestartTime = oCfg.getValueAsUnsignedLong("autorestart",AutoRestartTime);
     //storeSValueIF(&(AppConfig::AutoRestartTime),oCfg["autorestart"]);
 }
 
