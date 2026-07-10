@@ -45,7 +45,7 @@ struct OnAirLightStatus {
     bool isCamOn = false;
     unsigned long ulLastUpdate = 0;
     // Helper fucntions..
-    void setState(const char *pszDevice,const char *pszMode);
+    bool setState(const char *pszDevice,const char *pszMode);
     bool isTimeOutReached(unsigned long ulTimeOutMillis);
 };
 /*
@@ -66,12 +66,18 @@ struct OnAirLightClient {
  */
 class COnAirLight : public CLightSwitch, public IModule, public IHomeAssistantComponent{
     private:
+        bool m_bNeedsHAUpdate = true;       // Initial state needs to be published to HA
         unsigned long _ulWaveFadeIn  = 2000;
         unsigned long _ulWaveFadeOut = 2000;
         unsigned long _ulWaveOnTime  =  100;
         unsigned long _ulWaveOffTime = 1000;
         std::map<String,OnAirLightStatus> tClientStaties;
-
+        const char* m_szHA_DeviceName = "HomeAssistant";
+        int writeHAValueSelectTo(char *pszBuffer, size_t nBufferSize, const char *pszMediaType) {
+            return(snprintf(pszBuffer,nBufferSize,
+                "{{ 'ON' if value_json.get('onair', {}).get('clients', {}).get('%s', {}).get('is%sOn') else 'OFF' }}",
+                m_szHA_DeviceName,pszMediaType));
+        }
     public:
         // OnAirLightStatus Status;
         OnAirLightConfig Config;
@@ -83,14 +89,13 @@ class COnAirLight : public CLightSwitch, public IModule, public IHomeAssistantCo
         void writeConfigTo(CJsonNode &oCfg, bool bHideCritical) override;
         void writeStatusTo(CJsonNode &oStatus,int nLevel = STATUS_LEVEL_INFO) override;
         void insertComponentDiscovery(const char *pszCompName,JsonNode & oComponentArea, CMQTTController * pController);
-        void insertHADiscoveryCompontents(JsonNode & oComponents);
         void updateLightStatus();
-        void dispatchBrokerMessage(const char *pszMessage, int nLen);  
+        void dispatchBrokerMessage(MQTTMessage *pMsg);  
         bool isCamOn();
         bool isMicOn();
 
     private:
         int getModeByName(String strMode,int nDefault);
         String setNameOfMode(CJsonNode &oCfg, const char *pszKey, int nMode);
-        void setClientStatus(String strClientAddress, const char *pszMode, const char *pszCommand);
+        bool setClientStatus(String strClientAddress, const char *pszMode, const char *pszCommand);
 };

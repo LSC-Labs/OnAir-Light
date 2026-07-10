@@ -1,0 +1,72 @@
+{
+    "dev": {
+        "ids": "LSC-Device",
+        "name": "LSC-Device",
+        "mf": "LSC",
+        "mdl": "OnAir Light",
+        "sw": "2.1.1.2-D",
+        "configuration_url": "http://LSC-Device"
+    },
+    "o": {
+        "sw": "2.1.1.2-D",
+        "name": "OnAir Light",
+        "url": "https://github.com/LSC-Labs"
+    },
+    "cmps": {
+        "cam": {
+            "p": "binary_sensor",
+            "icon": "mdi:cctv",
+            "value_template": "{{ 'ON' if value_json.onair.isCamOn else 'OFF' }}",
+            "payload_on": "ON",
+            "payload_off": "OFF",
+            "unique_id": "d3ca0-cam",
+            "name": "Camera status"
+        },
+        "mic": {
+            "p": "binary_sensor",
+            "icon": "mdi:microphone",
+            "value_template": "{{ 'ON' if value_json.onair.isMicOn else 'OFF' }}",
+            "payload_on": "ON",
+            "payload_off": "OFF",
+            "unique_id": "d3ca0-mic",
+            "name": "Microphone status"
+        },
+        "cam_switch": {
+            "p": "switch",
+            "icon": "mdi:cctv",
+            "value_template": "{{ 'ON' if value_json.get('onair', {}).get('clients', {}).get('HomeAssistant', {}).get('isCamOn') else 'OFF' }}",
+            "state_on": "ON",
+            "state_off": "OFF",
+            "command_topic": "/home/test/OnAir/cmd/HomeAssistant/cam",
+            "payload_on": "ON",
+            "payload_off": "OFF",
+            "unique_id": "d3ca0-cam-switch",
+            "name": "Camera switch"
+        },
+        "mic_switch": {
+            "p": "switch",
+            "icon": "mdi:microphone",
+            "value_template": "{{ 'ON' if value_json.get('onair', {}).get('clients', {}).get('HomeAssistant', {}).get('isMicOn') else 'OFF' }}",
+            "state_on": "ON",
+            "state_off": "OFF",
+            "command_topic": "/home/test/OnAir/cmd/HomeAssistant/mic",
+            "payload_on": "ON",
+            "payload_off": "OFF",
+            "unique_id": "d3ca0-mic-switch",
+            "name": "Microphone switch"
+        },
+        "clients": {
+            "p": "sensor",
+            "icon": "mdi:account-multiple",
+            "unit_of_measurement": "clients",
+            "value_template": "{{ value_json.onair.clients | count if value_json.onair.clients is defined else 0 }}",
+            "json_attributes_topic": "/home/test/OnAir/state",
+            "json_attributes_template": "{{ {'clients': value_json.onair.clients | default([])} | tojson }}",
+            "unique_id": "d3ca0-clients",
+            "name": "Clients"
+        }
+    },
+    "qos": 2,
+    "state_topic": "/home/test/OnAir/state",
+    "availability_topic": "/home/test/OnAir/status"
+}
