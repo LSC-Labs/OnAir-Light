@@ -12,7 +12,7 @@ const APP_SETTINGS = {
      */
     "app": {
         "prog_name":"OnAir Light",
-        "prog_ver":"2.1.1",
+        "prog_ver":"2.2.0",
         "prog_copy": "(c) 2025 LSC-Labs",
         "logLevel": 5,
         "ws": {
@@ -256,6 +256,7 @@ const APP_SETTINGS = {
         }
     ]    
 }
+
 
 
 

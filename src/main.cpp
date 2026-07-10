@@ -271,6 +271,7 @@ void setup() {
     #ifdef DEBUGINFOS
         runDebugTests();
     #endif
+    Appl.start();
 }
 
 void loop() {
@@ -279,8 +280,8 @@ void loop() {
     // so look for new messages to be processed on the websocket
     oWebSocket.dispatchMessageQueue();
 
-    oMQTTController.publishHeartBeat();
-
+    oMQTTController.dispatch();
+  
     dispatchRadio433();
  
     // Set the status lights / messages

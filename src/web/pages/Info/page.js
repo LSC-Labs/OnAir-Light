@@ -94,23 +94,23 @@ class CInfoPage extends CPageHandler {
 
         if(oTable) {
             oTable.innerHTML = "";
-            if(!oClientList || oClientList.length == 0) {
+            if(!oClientList || Object.keys(oClientList).length == 0) {
                 let oRow = oTable.insertRow(-1);
                 ; let oCell = oRow.insertCell(0);
                 EC(oRow.insertCell(0)).i18n("Info.noClients");
                 // oTranse.translate(oCell,undefined,this.LocalVars);
                 // oCell.innerHTML = oTranse.translateI18n("Info.noClients","---",this.LocalVars); // "No clients connected...";
             } else {
-                for(let i=0; i < oClientList.length; i++) {
-                    if(oClientList[i].isCamOn || oClientList[i].isMicOn) bIsActive = true;
-
+                for(let strName in oClientList) {
+                // for(let i=0; i < oClientList.length; i++) {
+                    if(oClientList[strName].isCamOn || oClientList[strName].isMicOn) bIsActive = true;
                     let oRow = oTable.insertRow(-1);
                     EC(oRow.insertCell(0))
                         .ac("clientAddress")
-                        .html(oClientList[i].client);            
-                    EC(oRow.insertCell(1)).i18n(oClientList[i].isCamOn ? "Info.cam" : "Info.none");
-                    EC(oRow.insertCell(2)).i18n(oClientList[i].isMicOn ? "Info.micro" : "Info.none");
-                    const nLastUpd = oDevActStartMS + oClientList[i].lastUpd;
+                        .html(strName);            
+                    EC(oRow.insertCell(1)).i18n(oClientList[strName].isCamOn ? "Info.cam" : "Info.none");
+                    EC(oRow.insertCell(2)).i18n(oClientList[strName].isMicOn ? "Info.micro" : "Info.none");
+                    const nLastUpd = oDevActStartMS + oClientList[strName].lastUpd;
                     const oUpdDate = new Date(nLastUpd);
                     EC(oRow.insertCell(3)).setText(oUpdDate.toLocaleTimeString());
                 }

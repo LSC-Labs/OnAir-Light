@@ -1,7 +1,7 @@
 {
     "DebugMode": true,
     "prog_name": "OnAir Light",
-    "prog_version": "2.1.1.0-T",
+    "prog_version": "2.2.0.0-T",
     "uptime": "00:10:02",
     "starttime": 78,
     "now": 22325,
@@ -22,32 +22,28 @@
         "raw": 973
     },
     "onair": {
-        "clients": [
-            {
-                "client": "123.124.125.1",
+        "clients": {
+            "123.124.125.1": {
                 "isCamOn": true,
                 "isMicOn": false,
                 "lastUpd": 11859
             },
-            {
-                "client": "123.124.125.2",
+            "123.124.125.2": {
                 "isCamOn": false,
                 "isMicOn": true,
                 "lastUpd": 1200
             },
-            {
-                "client": "123.124.125.3",
+            "123.124.125.3": {
                 "isCamOn": false,
                 "isMicOn": false,
                 "lastUpd": 559
             },
-            {
-                "client": "123.124.125.4",
+            "123.124.125.4": {
                 "isCamOn": true,
                 "isMicOn": true,
                 "lastUpd": 22200
             }
-        ]
+        }
     },
     "wifi": {
         "stopTime": 0,

@@ -9,9 +9,9 @@
 #define PROG_HOMEPAGE      "https://github.com/lsc-labs/OnAir-Light#readme"
 
 #define PROG_VERSION_MAJOR 2
-#define PROG_VERSION_MINOR 1
-#define PROG_VERSION_PATCH 1
-#define PROG_VERSION_BUILD 2
-#define PROG_VERSION       "2.1.1"
-#define PROG_VERSION_SHORT "2.1"
-#define PROG_VERSION_LONG  "2.1.1.2"
+#define PROG_VERSION_MINOR 2
+#define PROG_VERSION_PATCH 0
+#define PROG_VERSION_BUILD 4
+#define PROG_VERSION       "2.2.0"
+#define PROG_VERSION_SHORT "2.2"
+#define PROG_VERSION_LONG  "2.2.0.4"
