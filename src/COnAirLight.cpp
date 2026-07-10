@@ -174,7 +174,7 @@ void COnAirLight::writeStatusTo(CJsonNode &oCfg,int nLevel) {
     JsonNode *pClients = oCfg.getObject("clients",true);
     for(auto oClient : tClientStaties) {
         // JsonObject oData = CreateEmptyJsonObject(oArray);//  oArray.createNestedObject();
-        JsonNode *pData = pClients->getObject(oClient.first.c_str(),true);
+        JsonNode *pData = pClients->createObject(oClient.first.c_str());
         (*pData)["isCamOn"] = oClient.second.isCamOn;
         (*pData)["isMicOn"] = oClient.second.isMicOn;
         (*pData)["lastUpd"] = oClient.second.ulLastUpdate;
