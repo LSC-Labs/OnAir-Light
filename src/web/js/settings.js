@@ -12,14 +12,15 @@ const APP_SETTINGS = {
      */
     "app": {
         "prog_name":"OnAir Light",
-        "prog_ver":"2.2.1",
+        "prog_ver":"2.3.0",
         "prog_copy": "(c) 2025 LSC-Labs",
         "logLevel": 5,
         "ws": {
             "recon": true,
         },
-        "latest": {
-            "url": "https://api.github.com/repos/LSC-Labs/OnAir-Light/releases/latest"
+        "firmware": {
+            "list": "https://api.github.com/repos/LSC-Labs/OnAir-Light/releases",
+            "latest": "https://api.github.com/repos/LSC-Labs/OnAir-Light/releases/latest"
         },
         "GitHubPage": "https://github.com/LSC-Labs/OnAir-Light",
         "homePage": "https://github.com/LSC-Labs/OnAir-Light",
@@ -256,6 +257,7 @@ const APP_SETTINGS = {
         }
     ]    
 }
+
 
 
 
