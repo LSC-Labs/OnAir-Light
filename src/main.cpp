@@ -113,7 +113,9 @@ void registerModules() {
     Appl.addConfigHandler("rf433", &oRF433Receiver);
     Appl.addStatusHandler("rf433", &oRF433Receiver);
 
-    oMQTTController.registerHomeAssistantComponent("onair",&oOnAirLight);
+    oMQTTController.registerHomeAssistantComponent("onair", &oOnAirLight);
+    oMQTTController.registerHomeAssistantComponent("bat",   &oBatMeasure); 
+    oMQTTController.registerHomeAssistantComponent("wifi",  &oWiFiController);   
     DEBUG_FUNC_END();
 }
 
