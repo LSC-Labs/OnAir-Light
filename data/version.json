@@ -1,9 +1,9 @@
 {
     "name": "OnAir Light",
     "major": "2",
-    "minor": "3",
+    "minor": "4",
     "patch": "0",
-    "build": 14,
+    "build": 2,
     "author": "LSC Labs - P.Liebl",
     "homepage": "https://github.com/lsc-labs/OnAir-Light#readme"
 }
