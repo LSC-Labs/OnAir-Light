@@ -189,7 +189,6 @@ void COnAirLight::writeStatusTo(CJsonNode &oCfg,int nLevel) {
 /// @param nType  - ONAIR_DEVICE_ON or ONAIR_DEVICE_OFF
 /// @return 
 int COnAirLight::receiveEvent(const void * pSender, int nMsgId, const void * pMessage, int nType) {
-    DEBUG_FUNC_START_PARMS("%d,%d",nMsgId,nType);
     switch(nMsgId) {
         case MSG_APPL_STARTED:  // Application started, all modules are initialized and available...
             m_bNeedsHAUpdate = true; // Force update to HA, as we have no idea if the light is on or off... 

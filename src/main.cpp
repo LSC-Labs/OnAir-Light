@@ -4,7 +4,7 @@
 #include <Appl.h>
 #include <Status.h>
 #include <Button.h>
-#include <RGBLed.h>
+#include <SysStatusLed.h>
 #include <WiFiController.h>
 #include <WebServer.h>
 #include <WebRoutes.h>
@@ -30,7 +30,7 @@ CStatus         AppStatus;
 /**
  * I/O objects
  */
-CRGBLed         oRgbLed(D5,D6,D7,false);
+CSysStatusLed   oRgbLed(D5,D6,D7,false);   // status LED - driven by the message bus (MSG_APPL_LOOP)
 CButton         oButton(D4);
 COnAirLight     oOnAirLight(D1);
 CBatteryMeasure oBatMeasure(A0,4.4);
@@ -76,6 +76,9 @@ void runDebugTests() {
   Serial.println("Current files:");
   Serial.println(oFS.getFileList());
   Serial.printf("Button status : isLogicalOn == %d\n",oButton.isPressed());
+  JsonNode oConfig;
+  Appl.writeConfigTo(oConfig,false);
+  Serial.printf(" - Config: \n%s\n",oConfig.getAsJsonTextPretty());
   Serial.println(" ---------------- DEBUG TESTS - END");
 }
 #endif
@@ -92,6 +95,10 @@ void registerModules() {
     DEBUG_INFO(" - on appl msg bus...");
     Appl.MsgBus.registerEventReceiver(&AppStatus);
     Appl.MsgBus.registerEventReceiver(&oOnAirLight);
+    Appl.MsgBus.registerEventReceiver(&oRgbLed);
+    // WebSocket: dispatches its message queue on MSG_APPL_LOOP and sends
+    // bus messages (i.e. WiFi scan results) to the clients
+    Appl.MsgBus.registerEventReceiver(&oWebSocket,"WebSocket");
     
     DEBUG_INFO(" - on config interface");
     // Register modules with configuration
@@ -158,13 +165,13 @@ void dispatchRadio433() {
 void dispatchActions() {
   static unsigned long _buttonPressedTime = 0;
   static int _buttonPressedCount = 0;
-  oWiFiController.restartIfNeeded();
   if(AppStatus.isRebootPending) {
     Appl.reboot(2000,true);
   } else if(AppStatus.isButtonPressed) {
     if(_buttonPressedTime == 0) _buttonPressedTime = millis();
     // Longer than 5 millis pressed ? => reboot...
-    else if((millis() - _buttonPressedTime) > 5 * 1000) AppStatus.isRebootPending = true;
+    // Send the reboot request as event, so all modules (i.e. the status LED) are informed
+    else if((millis() - _buttonPressedTime) > 5 * 1000) Appl.MsgBus.sendEvent(nullptr,MSG_REBOOT_REQUEST,"Button",0);
   } else {
     if(_buttonPressedTime != 0 && (millis() - _buttonPressedTime) < 500) {
       const char *pszID = "Light - Button";
@@ -187,31 +194,6 @@ void dispatchActions() {
   } 
 }
 
-/**
- * @brief Reflect reboot, button and WiFi state on the RGB status LED.
- */
-void updateStatusLED() {
-  // Reboot and Button Pressed == Prio 1
-  if(AppStatus.isRebootPending) {
-    oRgbLed.setColor(RGB_COLOR::RED);
-  } else if(AppStatus.isButtonPressed) {
-    oRgbLed.blink(RGB_COLOR::GREEN,100,100);
-  }  else {
-    // Normal operation...
-    int nBlinkOn = 50;
-    int nBlinkOff = 10000;
-    int nColor = RGB_COLOR::YELLOW;
-    if(oWiFiController.Status.isInAccessPointMode) {
-      nColor = RGB_COLOR::BLUE;
-    } else if(oWiFiController.Status.isWiFiConnected) {
-      nColor = RGB_COLOR::GREEN;
-      // Strength of signal to low or not longer available...
-      if(!WiFi.isConnected())     { nColor = RGB_COLOR::RED; }
-      else if (WiFi.RSSI() < -82) { nColor = RGB_COLOR::YELLOW;}
-    }
-    oRgbLed.blink(nColor,nBlinkOn,nBlinkOff); 
-  }
-} 
 
 /// @brief Setup the system
 /// - Prepare the filesystem
@@ -278,17 +260,14 @@ void setup() {
 
 void loop() {
 
-    // The WebServer is handling already the GET/POST/WebSocket requests 
-    // so look for new messages to be processed on the websocket
-    oWebSocket.dispatchMessageQueue();
+  Appl.dispatch();
 
-    oMQTTController.dispatch();
-  
+    // Appl.dispatch() sends MSG_APPL_LOOP on the message bus - the library modules
+    // dispatch themselves there: WebSocket (message queue), MQTT, WiFi (scan, reconnect),
+    // WebServer (reboot after OTA), Button, status LED (oRgbLed).
+
     dispatchRadio433();
  
-    // Set the status lights / messages
-    updateStatusLED();
-
     // dispatch the requested actions...
     dispatchActions();
 
