@@ -12,9 +12,12 @@ int CStatus::receiveEvent(const void * pSender, int nMsgType, const void *pMessa
         case MSG_BUTTON_ON     : isButtonPressed = true; DEBUG_INFO("--- button ON"); break;
         case MSG_BUTTON_OFF    : isButtonPressed = false; DEBUG_INFO("--- button OFF");break;
         // case MSG_SET_RESTART_WIFI  : restartWiFi     = nClass == WIFI_RESTART_OFF ? false : true; break;
-        case MSG_SCAN_RF433    : {
+        case MSG_SCAN_RF433    :            // legacy application message
+        case MSG_RF433_SCAN    : {          // sent by CWebSocket ("scanRF433" command)
             DEBUG_INFO("--> STATUS message for SCAN RF433 received...");
-            pScanRF433Requestor = (AsyncWebSocketClient *) pMessage;
+            const AsyncWebSocketClient *pClient = (const AsyncWebSocketClient *) pMessage;
+            ScanRF433RequestorId = pClient ? pClient->id() : 0;
+            break;
         }
     };
     return(EVENT_MSG_RESULT_OK);

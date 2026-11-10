@@ -19,7 +19,7 @@
     "usePages": [
         "lib/PLibESPV1/src/web/pages/_Defaults",
         "src/web/pages/Info",
-        "src/web/pages/Status",
+        "lib/PLibESPV1/src/web/pages/Status",
         "lib/PLibESPV1/src/web/pages/System",
         "lib/PLibESPV1/src/web/pages/WiFi",
         "lib/PLibESPV1/src/web/pages/MQTT",
@@ -35,6 +35,7 @@
     "sync" : {
         "files": [
                     "lib/PLibESPV1/scripts/buildSteps.py            > scripts/buildSteps.py",
+                    "lib/PLibESPV1/scripts/patchLibs.py             > scripts/patchLibs.py",
                     "lib/PLibESPV1/scripts/_buildPages.js           > scripts/_buildPages.js",
                     "lib/PLibESPV1/scripts/_common.js               > scripts/_common.js",
                     "lib/PLibESPV1/scripts/_compilePages.js         > scripts/_compilePages.js",

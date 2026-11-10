@@ -2,16 +2,16 @@
 // (c) LSC Labs
 // This file will be build by the runtime, so do not change here.
 // If you want to change the major/minor/patch version nummer, use the file data/prog_ver.json.
-// The build nummer will be incremented in this file by platform.io -> prebuild steps
+// Use the npm incr* scripts to update this file.
+// The build nummer will be incremented by platform.io -> prebuild steps (release mode)
 
 #define PROG_VERSION_NAME  "OnAir Light"
-#define PROG_AUTHOR        "LSC Labs - P.Liebl"
-#define PROG_HOMEPAGE      "https://github.com/lsc-labs/OnAir-Light#readme"
-
+#define PROG_AUTHOR        LSC Labs - P.Liebl
+#define PROG_HOMEPAGE      https://github.com/lsc-labs/OnAir-Light#readme
 #define PROG_VERSION_MAJOR 2
-#define PROG_VERSION_MINOR 4
+#define PROG_VERSION_MINOR 5
 #define PROG_VERSION_PATCH 0
-#define PROG_VERSION_BUILD 4
-#define PROG_VERSION       "2.4.0"
-#define PROG_VERSION_SHORT "2.4"
-#define PROG_VERSION_LONG  "2.4.0.4"
+#define PROG_VERSION_BUILD 0
+#define PROG_VERSION       "2.5.0"
+#define PROG_VERSION_SHORT "2.5"
+#define PROG_VERSION_LONG  "2.5.0.0"

@@ -42,7 +42,12 @@ bool OnAirLightStatus::setState(const char *pszDevice, const char *pszMode) {
             DEBUG_INFOS(" - unknown device : %s",pszDevice);
         }
         if(bHasChanged) {
-            Appl.MsgBus.sendEvent(this,MSG_MQTT_SEND_JSONSTATE,Appl.getState(),0);
+            {
+                // Local tree - freed after sending (Appl.getState() keeps it in memory)
+                JsonNode oState;
+                Appl.writeStatusTo(oState,STATUS_LEVEL_STATE);
+                Appl.MsgBus.sendEvent(this,MSG_MQTT_SEND_JSONSTATE,&oState,0);
+            }
         }
     }
     return(bHasChanged);
@@ -240,7 +245,12 @@ void COnAirLight::updateLightStatus() {
         default: switchOff();
     }
     if(m_bNeedsHAUpdate) {
-        Appl.MsgBus.sendEvent(this,MSG_MQTT_SEND_JSONSTATE,Appl.getState(),0);
+        {
+            // Local tree - freed after sending (Appl.getState() keeps it in memory)
+            JsonNode oState;
+            Appl.writeStatusTo(oState,STATUS_LEVEL_STATE);
+            Appl.MsgBus.sendEvent(this,MSG_MQTT_SEND_JSONSTATE,&oState,0);
+        }
         m_bNeedsHAUpdate = false;
     }
     // DEBUG_INFOS(" - isMicOn(%d) isCamOn(%d) -> Mode %d (CamMode %d) (MicMode %d)",bIsMicOn, bIsCamOn, nMode,Config.OnCamMode,Config.OnMicMode);

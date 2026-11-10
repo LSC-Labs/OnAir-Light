@@ -136,7 +136,7 @@ void dispatchRadio433() {
   if(oRF433Receiver.available()) {
     unsigned long ulData = oRF433Receiver.getReceivedValueOnce(300);
     if(ulData != 0) {
-      if(AppStatus.pScanRF433Requestor) {
+      if(AppStatus.ScanRF433RequestorId != 0) {
         // Scan Code request from frontend ?
         // JSON_DOC_STATIC(oMsg,512);
         JsonNode oMsg;
@@ -144,8 +144,9 @@ void dispatchRadio433() {
         JsonNode *pPayload = oMsg.createPayloadStructure("update","rf433code");
         (*pPayload)["on"] = ulData;
         DEBUG_INFO(" - sending received code on websocket...");
-        oWebSocket.sendJsonDocMessage(oMsg,nullptr,AppStatus.pScanRF433Requestor);
-        AppStatus.pScanRF433Requestor = nullptr;
+        // Send by client id - a disconnected client is skipped by the library
+        oWebSocket.text(AppStatus.ScanRF433RequestorId, oMsg.getAsJsonText());
+        AppStatus.ScanRF433RequestorId = 0;
       } else {
         if(oRF433Receiver.isEnabled() && oRF433Receiver.hasKey(ulData)) {
           RF433Message oMsg  = oRF433Receiver.getMessage(ulData);
@@ -226,16 +227,19 @@ void setup() {
     Appl.printDiag();
     ApplLogInfo(F("Initializing services..."));
  
-    // Start the WiFi - with config, if it could be loaded and no button is pressed !
-    oWiFiController.startWiFi(AppStatus.configLoaded && !oButton.isPressed());
-
+    // Register the web routes BEFORE the WiFi is started: the server is started on
+    // MSG_WIFI_CONNECTED - requests (i.e. network scanners) must not hit a server,
+    // whose routes are still being registered.
     ApplLogInfo(F("..initializing web"));
     registerWebRoutes(oWebServer);  
     registerWebApis(oWebServer);
     oWebServer.addMiddleware(&oCorsMiddleware);
     oWebServer.addMiddleware(&oTestMW);
     oWebServer.addHandler(&oWebSocket);
-    oWebServer.begin();
+
+    // Start the WiFi - with config, if it could be loaded and no button is pressed !
+    oWiFiController.startWiFi(AppStatus.configLoaded && !oButton.isPressed());
+    oWebServer.begin();         // ignored, if already started by MSG_WIFI_CONNECTED
 
     ApplLogInfo(F("..initializing mqtt"));
     oMQTTController.setup();

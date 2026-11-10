@@ -5,6 +5,7 @@
 .vscode/launch.json
 .vscode/ipch
 _obsolet
+crashlogs
 node_modules
 bin
 logs

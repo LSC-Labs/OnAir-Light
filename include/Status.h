@@ -13,7 +13,9 @@ class  CStatus : public IMsgEventReceiver, public IStatusHandler {
         volatile bool isRebootPending = false;
         volatile bool isButtonPressed = false;
         volatile bool configLoaded    = false;
-        AsyncWebSocketClient * pScanRF433Requestor = nullptr;
+        /// @brief WebSocket client id that requested a RF433 scan (0 = no request).
+        /// Only the id is kept - the client object may be deleted at any time (disconnect).
+        uint32_t ScanRF433RequestorId = 0;
 
 
     public:

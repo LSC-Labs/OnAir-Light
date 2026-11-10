@@ -51,8 +51,13 @@
             </div>
         </div>
     </div>
-</div><!-- 
-    Status - Page for Dew Point Switch
+</div><!--
+    Status page (PLibESPV1)
+
+    Shows the device, memory, battery (if available), network and message broker status.
+    The values are read from apiV1/status and apiV1/sysstatus (see WebRoutes.cpp)
+    and refreshed every 5 seconds while the page is shown.
+    The menu entry "Status" is part of the default menu (settings.js).
 -->
 <div id="StatusPage">
     <!-- Status of $(prog_name) Ver.: $(prog_ver) -->
@@ -78,6 +83,11 @@
                         <td data-cfg="uptime"></td>
                     </tr>
                     <tr>
+                        <!-- reason of the last reset (exception, watchdog...) -->
+                        <th data-i18n="Status.resetReason"></th>
+                        <td data-cfg="reset_reason"></td>
+                    </tr>
+                    <tr>
                          <!-- Flash size -->
                         <th data-i18n="Status.flashSize"></th>
                         <td >
@@ -92,18 +102,28 @@
                         </td>
                     </tr>
                     <tr>
-                        <!-- Flash usage -->
+                        <!-- Program memory: sketch in relation to the sketch area (sketch + free OTA space) -->
                         <th data-i18n="Status.flashUsage"></th>
                         <td>
                             <div class="progressBar">
-                                <div id="flashUsage" class="usageStatus usageOK" title="Warning - too less memory"></div>
+                                <div id="flashUsage" class="usageStatus usageOK"></div>
                             </div>
                         </td>
                     </tr>
                     <tr>
-                        <!-- Battery status todo: maybe a small battery icon -->     
-                        <th data-i18n="Status.battery" ></th>
-                        <td ><span data-cfg="bat_volt"></span> V</td>
+                        <!-- Heap: free / largest block / fragmentation -->
+                        <th data-i18n="Status.heap"></th>
+                        <td id="heapUsage"></td>
+                    </tr>
+                    <tr>
+                        <!-- File system usage -->
+                        <th data-i18n="Status.fsUsage"></th>
+                        <td id="fsUsage"></td>
+                    </tr>
+                    <tr id="batteryRow" style="display:none">
+                        <!-- Battery voltage - only shown, if a battery is available (bat_available) -->
+                        <th data-i18n="Status.battery"></th>
+                        <td><span data-cfg="bat_volt"></span> V</td>
                     </tr>
                 </table>
             </div>
@@ -122,6 +142,11 @@
                         <!-- Signal strength in rssi -->
                         <th data-i18n="Status.rssi" ></th>
                         <td><span data-cfg="wifi_rssi"></span> dB</td>
+                    </tr>
+                    <tr>
+                        <!-- WiFi standard (PHY mode) -->
+                        <th data-i18n="Status.phymode"></th>
+                        <td>802.11<span data-cfg="wifi_phymode"></span></td>
                     </tr>
                     <tr>
                         <!-- IP address of the device -->
@@ -333,6 +358,21 @@
                 </label>
             </form>
         </div>
+    </div>
+
+    <!-- PHY mode (Station mode only, ESP8266) -->
+    <div class="row form-group" data-viewon="ap_mode=0" data-auth="RO">
+        <label class="$(col-label-class) info-icon" data-i18n="@title:WiFi.phymode.info">
+            <span data-i18n="WiFi.phymode.label"></span>
+            <icon data-icon="Info"></icon>
+        </label>
+        <span class="$(col-input-class)">
+            <select class="form-control input-sm" name="phymode">
+                <option value="n" data-i18n="WiFi.phymode.n"></option>
+                <option value="g" data-i18n="WiFi.phymode.g"></option>
+                <option value="b" data-i18n="WiFi.phymode.b"></option>
+            </select>
+        </span>
     </div>
 
    

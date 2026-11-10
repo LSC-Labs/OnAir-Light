@@ -59,26 +59,19 @@
     "panel": {
       "device": "Device",
       "network": "Network",
-      "mqtt": "Message broker",
-      "dewpoint": "Dew Point switch"
-    },
-    "fan": {
-      "active": "Fan active"
-    },
-    "sensor": {
-      "OD": "Sensor (Outdoor)",
-      "ID": "Sensor (Indoor)",
-      "dewpoint": "DP"
+      "mqtt": "Message broker"
     },
     "legend": "Status of $(prog_name) Ver.: $(prog_ver)",
     "hostname": "Systemname",
     "uptime": "Uptime",
+    "resetReason": "Last reset",
     "flashSize": "Flash size",
     "sketchSize": "Sketch size",
-    "flashUsage": "Mem usage",
+    "flashUsage": "Program memory",
     "battery": "Battery",
     "ssid": "SSID",
     "rssi": "Signal strength",
+    "phymode": "WiFi standard",
     "ip": "IP address",
     "gateway": "Gateway address",
     "netmask": "Network mask",
@@ -89,9 +82,14 @@
     "lastConStart": "Last Connection start",
     "lastConLost": "Last Connection lost",
     "disconReason": "Disconnect reason",
-    "memOK": "$(sketch_size) Kb used of $(flash_available) Kb => $(flash_used_percent)%",
-    "memWarn": "Too less memory to update via OTA ! $(flash_used_percent)% used.",
-    "dewpoints": "Dew Points In / Out"
+    "memOK": "Sketch $(sketch_kb) KB of $(sketch_area_kb) KB ($(flash_used_percent)%) - OTA update possible (up to $(sketch_free_kb) KB)",
+    "memWarn": "Not enough memory for an OTA update! Sketch $(sketch_kb) KB, only $(sketch_free_kb) KB free.",
+    "fsUsage": "File system",
+    "heap": "Heap",
+    "fsOK": "$(fs_used_kb) KB of $(fs_total_kb) KB used ($(fs_used_percent)%)",
+    "fsWarn": "File system almost full! $(fs_used_kb) KB of $(fs_total_kb) KB used ($(fs_used_percent)%)",
+    "heapInfo": "$(heap_free_kb) KB free (min. $(heap_min_kb) KB), largest block $(heap_block_kb) KB, fragmentation $(heap_frag)%",
+    "heapWarn": "Low free heap or high fragmentation - restarts possible!"
   },
   "System": {
     "Restart": {
@@ -168,6 +166,13 @@
     "STA": {
       "type": "Client",
       "desc": "Type your Wi-Fi Network's SSID or press 'Scan' for nearby Wireless Networks to join."
+    },
+    "phymode": {
+      "info": "WiFi standard (ESP8266 only). 802.11g avoids crashes in the ESP8266 SDK when the router changes its 11n settings (i.e. channel width, mesh). Active after a restart.",
+      "label": "WiFi standard",
+      "n": "802.11b/g/n",
+      "g": "802.11b/g (more stable)",
+      "b": "802.11b"
     },
     "legend": "Wi-Fi Settings"
   },

@@ -34,4 +34,3 @@ The program is designed to use the D1 mini as it is cheap and simple and is usin
 
 ## Used runtime
 If you want to know how to use the runtime and to modifiy enhance the project, you can find the description in  [the Wiki of runtime](https://github.com/LSC-Labs/PLibESPV1/wiki).
-
