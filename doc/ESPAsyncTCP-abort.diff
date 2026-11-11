@@ -1,0 +1,24 @@
+--- a/src/ESPAsyncTCP.cpp
++++ b/src/ESPAsyncTCP.cpp
+@@ -344,10 +344,19 @@
+   //    of a 2nd call to tcp_abort().
+   // 6) Callbacks to _recv() or _connected() with err set, will result in _pcb
+   //    set to NULL. Thus, preventing possible calls later to tcp_abort().
++  // 7) tcp_abort() calls the error callback synchronously - the owner may delete
++  //    this object there. So clear the members first and do not touch them afterwards.
++  // 8) tcp_abort() has freed the pcb - if we are inside a lwIP callback of this
++  //    connection, it must return ERR_ABRT, otherwise lwIP uses the freed pcb.
++  //    _s_error() marked the tracker as errored (=> ERR_OK) - reset it.
+   if(_pcb) {
+-    tcp_abort(_pcb);
++    tcp_pcb *pcb = _pcb;
+     _pcb = NULL;
+-    setCloseError(ERR_ABRT);
++    std::shared_ptr<ACErrorTracker> errorTracker = _errorTracker;   // keeps the tracker alive
++    errorTracker->setCloseError(ERR_ABRT);
++    tcp_abort(pcb);       // may delete this !
++    errorTracker->_errored     = EE_OK;       // => getCallbackCloseError() returns ERR_ABRT once
++    errorTracker->_close_error = ERR_ABRT;
+   }
+   return;
+ }
